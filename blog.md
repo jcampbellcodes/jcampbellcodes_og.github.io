@@ -1,15 +1,8 @@
 ---
 layout: default
+title: audio programming blog
+permalink: /blog/
 ---
-<div class="header-bar">
-  <h1>hello!</h1>
-  <h2>i am an audio engineer based in boulder, co</h2>
-  <br/>
-  <hr>
-  <br/>
-</div>
-
-
 <ul class="post-list">
     {% for post in site.posts %}
       <li>

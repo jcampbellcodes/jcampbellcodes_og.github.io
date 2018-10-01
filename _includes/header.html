@@ -1,19 +1,26 @@
 <header class="site-header">
 
-  <div class="wrapper">
+  <div class="wrapper" style="text-align: center;">
 
     <nav class="site-nav">
 
       <div class="trigger">
         <!-- {{ site.title }} instead of blog -->
-        <a class="page-link" href="{{ site.baseurl }}/">blog</a>
-        <a class="page-link" href="https://github.com/jcampbellcodes/">github</a>
+        <a class="page-link" style="float:left;" href="{{ site.baseurl }}/">home</a>
+        <a class="page-link" style="float:left;" href="{{ site.baseurl }}/blog">blog</a>
+        <a class="page-link" style="float:left;" href="{{ site.baseurl }}/about">whoami</a>
 
-        {% for page in site.pages %}
-          {% if page.title %}
-          <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-          {% endif %}
-        {% endfor %}
+        <img class="site-logo" src="{{ site.baseurl }}/img/logo_white.png">
+        <style> 
+        .site-logo {
+          max-width: 25%;
+          max-height: 25%;
+        }
+        </style>
+        
+        <a class="page-link" style="float:right;" href="https://github.com/jcampbellcodes/">github</a>
+        <a class="page-link" style="float:right;" href="{{ site.baseurl }}/sound_design">sound design</a>
+        <a class="page-link" style="float:right;" href="{{ site.baseurl }}/resume">resume</a>
 
       </div>
     </nav>
