@@ -4,7 +4,12 @@ title: whoami
 permalink: /about/
 ---
 
-<img class="col one right" src="/img/prof_pic.jpg">
+
+
+<figure>
+  <img class="col center" src="/img/prof_pic.jpg">
+  <figcaption>parking garage roof in duluth, mn. pc-> <a href="https://www.instagram.com/naterendulich/?hl=en">nate rendulich</a></figcaption>
+</figure>
 
 <br/>
 I am a musician and audio programmer originally from Duluth, Minnesota. I went to school and worked in the
