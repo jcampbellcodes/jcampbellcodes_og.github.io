@@ -4,8 +4,6 @@ title: whoami
 permalink: /about/
 ---
 
-
-
 <figure>
   <img class="col center" src="/img/prof_pic.jpg">
   <figcaption>parking garage roof in duluth, mn. pc-> <a href="https://www.instagram.com/naterendulich/?hl=en">nate rendulich</a></figcaption>
