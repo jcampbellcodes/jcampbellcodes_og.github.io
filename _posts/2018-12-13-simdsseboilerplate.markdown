@@ -103,14 +103,14 @@ static void convolve_naive(
 }
 {% endhighlight %}
 
-Convolution was one of the original motivations for writing SIMD code and 
+Convolution was one of the original motivations for creating SIMD hardware and 
 it remains a nice, clean example. Keep in mind that the actual code that you
 see (a nested loop with arithmetic) is not the only part of the equation that
 makes this a good candidate for SIMD. A key factor is the usual high-throughput
 requirement of real-world convolution algorithms.
 
 When you start off with scalar code like this, it helps to take an 
-iterative approach.
+iterative approach in the conversion to SIMD intrinsics.
 
 <br>
 # First Iteration: A "Naive SIMD" Approach
@@ -120,7 +120,8 @@ create a backup of your code. Making a branch in your VCS is a good idea,
 and you also may find it convenient to `#ifdef` your old code above the new 
 code to reference and do quick checks for output regressions.
 
-Once you have that, it's time to just rework your inner loop to look “SIMD-like".
+Once you have that, it's time to just rework your inner loop algorithm to naively
+use instrinsic-instruction versions of your arithmetic operators.
 At this point the performance is not as important as coaxing out any caveats
 you may have not noticed at first glance that give you compiler errors
 or cause you to to reorganize buffers, etc.
@@ -166,11 +167,16 @@ This code also starts to do some of the re-jiggering of the buffers necessary wh
 converting to SIMD. The filter kernel is reversed and stored in SIMD registers before 
 the actual convolution takes place.
 <br>
-# Pass 2
+# Second Iteration: Time To Obfuscate
 <br>
-Restructure your data to load aligned outside of the loop
-Rework the inner loop to take advantage of your load restructuring
-PROFILE
+
+Once you have a basic idea of the implications or restructuring your algorithm
+to use SIMD intrinsics, it is time to make some more invasive changes. Here,
+we are going to preprocess both the input signal and the filter kernel to 
+load them into SIMD registers before the actual computation. 
+
+This will involve more complicated indexing in the inner loop to access
+the data in groups of four rather than one.
 
 {% highlight c++ %}
 static void convolve_simd( float *inSig, size_t M,
@@ -214,10 +220,19 @@ static void convolve_simd( float *inSig, size_t M,
                                      _mm_mul_ps(inSignalSIMD[j%4][index], 
                                      inKernelSIMD[j]));
         }
+        // still an unaligned store. room for improvement.
         _mm_storeu_ps(&outSig[i], accumulator);
     }
 }
 {% endhighlight %}
+
+The point of this example is not to show an efficient convolution implementation.
+In fact, this implementation really sucks -- it is way less readable and only about
+twice as fast on my machine as the naive implementation. 
+
+My point is describing the refactoring process: make your scalar transition to SIMD 
+in several iterations rather than a single go. This particular code could use several
+more. :)
 
 <br>
 ## Other Design Considerations
@@ -227,16 +242,85 @@ static void convolve_simd( float *inSig, size_t M,
 # Operate on aligned data 
 <br>
 
+Mentioned above, loading *aligned* data into SIMD registers is very important. SSE 
+intrinsics have unaligned versions of loads and stores, but they usually
+defeat the purpose of using intrinsics due to the glacially slow access.
+
+And if you accidentally try to load unaligned data with the aligned intrinsics (usually
+the defaults), you are looking at undefined behavior, and usually a segfault.
+
 <br>
 # Minimize loads/stores 
 <br>
-( call _mm_store and _mm_load the least number of times )
+One technique to remember with SIMD intrinsics is to do as much computation and
+SIMD sugar between loads and stores into SIMD registers. It can be difficult and involve
+reworking the logic of your algorithm signficantly, but try to call the `_mm_store` and 
+`_mm_load` family of intrinsics as little as possible.
 
 <br>
 # Restructure "Array of Structures" to "Structure of Arrays"
 <br>
-- this won't feel natural in a c-like language
-- it is the data oriented design approach
-- makes code more cache friendly and more SIMD friendly
-  - no longer "fighting" the simd registers
+
+This is one concept that will feel the most unnatural in a C-like language.
+We are trained in OOP that objects should represent a single-entity with
+various components that make it up. To work with many such objects, we store 
+the objects in an array and process the objects one-by-one by indexing into that array.
+Here is a simple example of a complex number struct and a contrived operation 
+where the real component is multiplied with the imaginary component:
+
+<br>
+# Array of Structures
+<br>
+{% highlight c++ %}
+struct complex_num
+{
+    float real;
+    float imag;
+};
+std::array<complex_num, 65536> g_ComplexNumsAoS;
+
+for(int i = 0; i < 65536; i++)
+{
+    g_ComplexNumsAoS[i].real *= g_ComplexNumsAoS[i].imag;
+}
+{% endhighlight %}
+
+To make this contrived operation more SIMD friendly, we want to convert it 
+to *Structure of Arrays* form. This means that we create a struct that 
+contains all of the data we want to operate on in parallel and we index
+into each array in that struct to get an individual entity's component
+value.
+
+<br>
+# Structure of Arrays
+<br>
+{% highlight c++ %}
+struct complex_nums
+{
+    alignas(16) std::array<float, 65536> real;
+    alignas(16) std::array<float, 65536> imag;
+} g_ComplexNumsSoA;
+
+for(int i = 0; i < 65536; i+=4)
+{
+    _mm_store_ps(&g_ComplexNumsSoA.real[i],
+                    _mm_mul_ps(_mm_load_ps(&g_ComplexNumsSoA.real[i]),
+                            _mm_load_ps(&g_ComplexNumsSoA.imag[i])));
+}
+{% endhighlight %}
+
+This not only makes our code work with the grain of the SIMD registers,
+but also increases the cache coherency. The larger topic this relates to
+is *data oriented design*, a concept that emphasizes laying data out
+with knowledge of how it is actually processed. 
+
+<br>
+# Conclusion
+<br>
+This article showed some practical considerations when writing C++ code with
+SIMD intrinsics. They can be a powerful tool, but should be used only in small 
+doses. Prefer SIMD wrapper libraries for the majority of a codebase that requires
+optimization and only fall down to instrinsics for small segments of 
+performance-critical code that you have verified aren't being vectorized perfectly 
+by your wrapper library or compiler.
 
