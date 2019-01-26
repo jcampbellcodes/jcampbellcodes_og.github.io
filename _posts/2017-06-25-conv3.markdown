@@ -9,8 +9,6 @@ Fourier transforms can be a big headache when learning about DSP, but if you can
 # FREQUENCY DOMAIN
 Thus far, we have been discussing audio signals in the time domain: each float in the collection represents a discrete amplitude value recorded at a consistent rate (sample rate). However, a signal is more than just a series of floats sampled at a constant rate; it also represents a sum of frequency components known as its frequency spectrum.
 
- 
-
 In some cases, it is more useful to consider a signal in terms of its frequency components. Specifically for our scenario we are taking advantage of duality: multiplication of two frequency spectra is equivalent to convolution of their corresponding time based signals. Though this property was long ignored due to the inconvenient computations required to transform signals between the time and frequency domains, the emergence of the fast Fourier transform in modern computing allowed real-time convolution by transforming a time-based signal into its Discrete Fourier Transform, multiplying by an impulse response spectrum, and transforming the result back into the time domain.
 
 # DISCRETE FOURIER TRANSFORM

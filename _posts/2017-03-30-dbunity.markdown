@@ -1,6 +1,6 @@
 ---
 layout: post
-title: UNITY SCRIPTING - PHYSICS PARAMETERS AND DECIBELS
+title: CONTROLLING UNITY PHYSICS PARAMETERS WITH SOUND
 date: 2017-03-30 07:20:00
 description: An example of tying sound implementation to physics rather than player input.
 ---
