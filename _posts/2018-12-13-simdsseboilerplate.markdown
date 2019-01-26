@@ -20,8 +20,7 @@ If each parallel "task" is also configured to use SIMD instructions, you'll real
 
 Like writing code with parallel tasks, writing parallel-instruction friendly code requires 
 special design considerations to be effective. Luckily, some of the significant design changes
-used to make SIMD-friendly code also make your code more cache friendly. So in a sense... you 
-also are utilizing parallelism at the design level. (ba-dum-tsss)
+used to make SIMD-friendly code also make your code more cache friendly.
 
 # How do I use it?
 ## Auto-Vectorization
