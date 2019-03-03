@@ -2,7 +2,7 @@
 layout: post
 title: A USE OF VARIADIC TEMPLATES THAT I CAN STILL UNDERSTAND NEXT WEEK
 date: 2019-03-2 21:01:00
-description: This post discusses using a case in which a dash of variadic templates resulted in more elegant library code.
+description: This post discusses a case in which a dash of variadic templates resulted in more elegant library code.
 ---
 
 In college I was told that behind any easy-to-use API is a tangled web of complicated code spaghetti. While I don't necessarily agree with this in many cases, it is in line with the common sentiment that C++ template meta-programming is best used in libraries that prioritize elegant or expressive usage over clear internal code, especially when those libraries emphasize complicated mathematics.
