@@ -13,7 +13,7 @@ But I'd like to talk about a case in which I found a common template meta-progra
 
 I was dealing with a class that took a stream of bytes  (between 2 and 8 bytes in length) and parsed/stored them in its own special way.
 
-```
+{% highlight c++ %}
 struct Dog
 {
     // A legacy constructor whose semantics we have to maintain
@@ -39,11 +39,11 @@ struct Dog
         }
     }
 };
-```
+{% endhighlight %}
 
 The problem was, `null` bytes were totally valid in this data stream (as were all other byte values), so we couldn't just use `0x0` as default arguments and pass them to this function that took an array. We could just change the constructor to take an array-of-bytes reference/`std::array` or use a `numBytes` argument or something, but we were working with an API that people were used to and didn't want to rock the boat in that way. So, my first "let's just get this to work in the ugliest way possible and stay externally the same" solution looked like this:
 
-```
+{% highlight c++ %}
 struct Dog
 {
     Dog(uint8_t byte0)
@@ -119,12 +119,12 @@ struct Dog
         }
     }
 };
-```
+{% endhighlight %}
 
 No more default arguments muddying our byte stream! So we know the length of our byte-stream without any `numBytes` argument or passing an array reference or `std::array<uint8_t, N>`, etc. But it sure is ugly...
 
 This is a case where we want the same code, but we just want the compiler to "copy and paste" it **for** us rather than us leaving all this redundant code explicitly written out, which is exactly what variadic templates can easily do. The equivalent code using a variadic template looks like this:
-```
+{% highlight c++ %}
 struct Dog
 {   
     // Ta-Da!
@@ -151,7 +151,7 @@ struct Dog
 
     static constexpr int kMaxByteStreamSize = 8;
 };
-```
+{% endhighlight %}
 Regarding the `static_assert`: yes, you could use SFINAE here, but looking at variadic templates for the first time is enough to make one's eyes cross on its own!
 
 My point here is that using a simple variadic template in this case made some very redundant, unwieldy code into a short snippet that can be at least reasoned about -- and may serve as a gateway drug into using variadic templates for more nefarious deeds!
