@@ -81,3 +81,4 @@ resume_print_social_links:      true
 
 # Design settings
 resume_theme:                   default
+theme: jekyll-theme-slate
