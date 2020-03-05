@@ -1,10 +1,11 @@
 ---
 layout: post
-title: Solar Conquest
-description: FatalByte
-img: /img/sound_design/solarconquest.png
+title: Tots' Life
+description: Tots Team
+img: /img/sound_design/totslife.png
 ---
 
-Solar Conquest is a commercial indie project I worked on in 2014 for Chicago studio FatalByte, released for iPhone in the App Store. Over a few weeks I did all of the sound effects with a Nord Rack 2X and Sonic Charge's Synplant.
+Tots' Life was a kids game made by Tots Team that we showed at the IndyPopCon as a student project from DePaul University.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Y_KUUh9KAtA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe src="https://player.vimeo.com/video/395604027" width="640" height="240" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+<p><a href="https://vimeo.com/395604027">Tot&#039;s Life</a> from <a href="https://vimeo.com/user107614570">Jack Campbell</a> on <a href="https://vimeo.com">Vimeo</a>.</p>

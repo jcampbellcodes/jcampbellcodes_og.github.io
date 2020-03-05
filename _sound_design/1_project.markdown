@@ -1,10 +1,16 @@
 ---
 layout: post
-title: VR Solitaire
-description: Babaroga LLC
-img: /img/sound_design/solitaire.png
+title: That Blooming Feeling
+description: Tots Team
+img: /img/sound_design/thatbloomingfeeling.png
 ---
 
-While working at Babaroga LLC I worked on a strange but interesting virtual reality project in which you could roam around a haunted study as a ghost playing different forms of solitaire. I had to employ spatialization techniques and cut the music into separate spatialized portions (the violin part of the score came from a ghost in the upstairs bedroom, whilst the piano accompaniment was played by an invisible spectre on the grand piano beside the player). I also had to script random scare sound events to make the mansion sound organic, as well as score the sound effects for the magical flying cards. The game is available for purchase on the Oculus Store.
+I worked on the music and sound design for this game in Unity over the course of a few months. It includes a semi-procedural singing system and the musical instrumentation is tied to the state of the environment.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/uecyyCISMBk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+Featured in:
+- [Rock Paper Shotgun](https://www.rockpapershotgun.com/2017/06/16/that-blooming-feeling)
+- [Medium](https://medium.com/owen-ketillson/that-blooming-feeling-itch-game-of-the-week-52aa82236c8e)
+- [Independent Games Festival](http://www.igf.com/blooming-feeling)
+
+
+<iframe width="560" height="315" src="https://player.vimeo.com/video/385563689" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>

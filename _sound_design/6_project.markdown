@@ -1,10 +1,11 @@
 ---
 layout: post
-title: Capstone - Mr. CanDo
+title: Composition
 description: DePaul University
-img: /img/sound_design/mrcando.png
+img: /img/deer.png
 ---
 
-Mr. CanDo was another DePaul capstone project. I did all of the composition, voice acting recording, sound design, and implementation of sounds. The real challenge here in implementation was organizing and debugging the execution of 3D sounds for a networked multiplayer game.
+This is a collection of miscellaneous compositions I did for game jams and student projects.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/sZaejfBfKNo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/71219563&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+
