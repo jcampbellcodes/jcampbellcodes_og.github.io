@@ -45,7 +45,7 @@ applications developers that will use the systems developers' code to create aud
 Typically, systems engineers will know a lot about various types of audio hardware and the nuanced considerations they have to make in order to design a system
 that audio software can run on. One thing that is cool about this discipline is that audio systems engineers have to dive deeper than anyone else into
 the minutae of audio technology: they may have to implement systems to a spec like MIDI 2.0 drivers, an AAC codec, or audio-over-USB drivers, and at that point,
-there are no more excuses to  
+there are no more excuses to hand-wave over the more grizly details of these technologies like you can get away with in most audio engineering disciplines.s
 
 # DSP Focus
 <br>
