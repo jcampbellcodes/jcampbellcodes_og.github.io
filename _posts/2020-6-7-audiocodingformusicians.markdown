@@ -218,53 +218,94 @@ each discipline of audio software engineering. They aren't perfect or all-inclus
 # Audio Systems Software Engineer (Native)
 <br>
 
-The ideal candidate will have extensive experience with audio programming in C++, DSP, instrument plugins (VST/AU/AAX), cross-platform development, disk streaming, MIDI, UI implementation, and an understanding of current music market conditions and demands.Desired Qualifications/Experience:
+The ideal candidate will have extensive experience with audio programming in C++, DSP, instrument plugins (VST/AU/AAX), cross-platform development, disk streaming, MIDI, UI implementation, and an understanding of current music market conditions and demands.
+
+Desired Qualifications/Experience:
+
 C++ and object-oriented programming
+
 Real-time audio development
+
 DSP and audio effects
+
 JUCE / VST / AU / AAX Frameworks
+
 UI design and implementation
+
 Cross-platform (Win/macOS) development
+
 Knowledge with existing music audio engines (ex. Kontakt, Mach5, Play, fMod etc)
+
 Self-motivated with the ability to work under minimal supervision
+
 Excellent written and communication skills
+
 Ability to be time-effective and handle multiple parts of a project at the same time
+
 Musical background
 
 Required Qualifications:
+
 Bachelor’s degree or equivalent in Computer Science.
+
 Demonstrable experience working in C++.
+
 Experience with any of the following: macOS, iOS or Windows APIs.
+
 Experience working with other programmers under a source code control system such as git or perforce.
 
 Desired Skills:
+
 In-depth knowledge of MIDI, audio and signal processing.
+
 Experience with CoreAudio, Audio Unit, ASIO and VST APIs.
+
 Experience with C++, boost and gtest.
+
 Good understanding of software Design Patterns.
+
 Ability to define, improve and transform software architectures.
+
 Familiarity with automated build systems such as Jenkins or buildbot.
+
 JavaScript, Python and bash scripting.
 
 
 # Audio Systems Software Engineer (Embedded)
 <br>
+
 Responsibilities will include understanding product feature development, systems design, performance tuning, board bring up, and driver development.
+
  Job Duties 
+
 · Develop and maintain Linux based OS with a low latency kernel, fast boot, and high reliability 
+
 · Develop Yocto recipes to generate firmware images 
+
 · Develop low level bootloader, and microcontroller code 
+
 · Work on hardware security design and implementation 
+
 · Coordinate with manufacturing engineers to assist in build, flash, and test 
+
 · Proactively document all work and write automated tests 
+
 Required Skills & Experience: 
+
 · Rock-solid C or C++ programming, Python shell scripting 
+
 · Linux device driver programming 
+
 · Network programming using TCP/IP, UDP sockets 
+
 · Low level programming of peripherals and interfaces, including experience with a developing for microcontrollers 
+
 · Ability to read hardware schematics at a basic level 
+
 · Experience with digital audio technologies including I2S, S/PDIF, ALSA 
+
 · Music or audio background or interest, with experience with music creation software 
+
 · Linux image building using YOCTO
 
 # Audio DSP Algorithm Engineer
@@ -272,23 +313,39 @@ Required Skills & Experience:
 
 Required Skills and Experience:
  A passion and interest in music and audio.
+
  Ability to perform circuit analysis for passive and active systems.
+
  Awareness of nonlinear models for silicon and magnetic devices.
+
  Experience with audio signal processing, incl. dynamics, filtering, modulated delays, feedback systems, etc.
+
  Experience with filter design, sampling theory, and DSP.
+
  Exposure to state-space and lattice structures, and basic control theory.
+
  Awareness of iterative solution methods for nonlinear systems.
+
  Experience with finite word-length artifacts in signal processing.
+
  Facility working in MATLAB, SciPy, or similar computing environment.
+
  Experience with C, C++.
+
  Exposure to coding for DSP processors. SHARC experience preferred.
+
 
 Principal Duties and Responsibilities:
  Working independently to carry out algorithm design projects based on product specifications.
+
  Design and implementation of novel signal processing methods and structures for modeling audio circuitry.
+
  Implementation and integration of algorithms into an existing software framework.
+
  DSP porting and resource optimization.
+
  Management of development and test schedules.
+
  Collaboration with product management, SQA, customer support, and marketing.
 
 # Audio QA Engineer
@@ -296,33 +353,55 @@ Principal Duties and Responsibilities:
 (Example from a Universal Audio posting)
 
 Universal Audio is looking for a quality assurance engineer to test UA virtual instruments software from inception through shipping, running numerous tests, recording and tracking bugs and validating fixes. Use your expert knowledge of audio recording to help flesh out the test grid, validate audio workflow and insure that our products ship with the highest quality possible. This position will test hardware/software integration including compatibility with various PC and Mac Operating systems, computer hardware, popular DAWs and plug-in formats.  
+
 Responsibilities 
 · Test UA hardware and software and hardware/software integration.  
+
 · Help formulate test plans.  
+
 · Check products against specs and compatibility matrix.  
+
 · Run grid tests to expose errors, write up clear understandable errors and track the progress of fixes.  
 
 · Test product and software workflows and insure product usability.  
+
 · Work closely with engineering, product management, program management and other QA team members.  
+
 · Attend product and QA meetings. 
+
 · Ensure all products adhere to strict UA compatibility standards.  
+
 · Report project status and issues weekly. 
+
 Requirements 
+
 · Excellent understanding of audio workflows.  
+
 · Good working knowledge of DAWs including Protools, Logic and Live.  
+
 · Experience working with bug databases like JIRA.  
+
 · The ability to read and understand product specs.
+
 
 # Virtual Instrument Sound Designer
 <br>
 
 Overall responsibility: Program next-generation sample products for Kontakt engine
+
 Core Requirements:
+
 Familiar with Kontakt 5 scripting
+
 Ideally previous experience with legato programming in Kontakt engine or similar
+
 Ability to take pre-existing scripts and advance them
+
 Ability to edit/manipulate samples
+
 Ability to take feedback and be a part of a team
+
 Previous experience with noise-reduction tools (ex. Izotope RX)
+
 All candidates must have extensive experience with Kontakt and ability to create scripts based on specs. Preferably the candidate also has experience in UI design.
 
