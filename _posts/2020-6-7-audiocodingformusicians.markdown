@@ -45,13 +45,22 @@ applications developers that will use the systems developers' code to create aud
 Typically, systems engineers will know a lot about various types of audio hardware and the nuanced considerations they have to make in order to design a system
 that audio software can run on. One thing that is cool about this discipline is that audio systems engineers have to dive deeper than anyone else into
 the minutae of audio technology: they may have to implement systems to a spec like MIDI 2.0 drivers, an AAC codec, or audio-over-USB drivers, and at that point,
-there are no more excuses to hand-wave over the more grizly details of these technologies like you can get away with in most audio engineering disciplines.s
+there are no more excuses to hand-wave over the more grizly details of these technologies like you can get away with in most audio engineering disciplines.
 
 # DSP Focus
 <br>
 
-Digital Signal Processing (DSP) as a discipline is all about creating or optimizing audio algorithms that run in audio products. DSP is a field
-of mathematics rather than a subset of programming.
+(NOTE!: Of all audio disciplines, the DSP specialization is the one I know the least about... so take this with a higher grain of salt than the rest of the article!)
+
+Audio digital signal processing (DSP) as a discipline in the current context is all about creating or optimizing audio algorithms that run in audio products. 
+DSP is a field of mathematics (spanning much wider than just digital audio signals) rather than a subset of programming. Thus this specialization, compared to the other
+two, involves more higher level prototyping in languagess like MATLAB and Python to make innovative and great sounding algos for audio effects like
+physical modeling, convolution, dynamics processing, etc. These engineers then port their protoyped DSP algorithms to C or C++ and optimize them to run in real time. 
+
+DSP is generally considered to be an arcane art, and unlike programming, I don't feel qualified to tell you that this isn't the case! Audio DSP is a fascinating
+subject and fun for anyone to learn the basics of in order to make their own audio gizmos -- in fact, pretty much any audio software developer is (or probably should be)
+"conversant" in audio DSP. But entry level positions in audio DSP are quite rare and may be less flexible when it comes to educational background than other
+audio software positions.
 
 
 # Other Music Software Careers
