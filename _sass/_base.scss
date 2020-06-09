@@ -14,12 +14,11 @@ dl, dd, ol, ul, figure {
 //$base-font-family:              Helvetica, sans-serif;
 @font-face {
     font-family: "SourceCode";
-    src: url("/css/fonts/ttf/SourceCodePro-Light.ttf");
-    src: 
-    url("/css/fonts/otf/SourceCodePro-Light.otf") format("opentype"),
-    }
+    src: url("/css/fonts/ttf/SourceCodePro-Light.ttf") format("truetype");
+    src: url("/css/fonts/otf/SourceCodePro-Light.otf") format("opentype"),
+}
 
-$base-font-family:              SourceCode, sans-serif;
+$base-font-family:              "Courier New", sans-serif;
 $base-line-height:              1.5em;
 $horizontal-spacing-unit:       50px;
 $vertical-spacing-unit:         40px;
