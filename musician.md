@@ -1,5 +1,6 @@
 ---
-layout: standalone
+layout: page
+title: music press releases
 permalink: /music/
 ---
 # <center> jack campbell </center> 
@@ -51,7 +52,7 @@ early 2019.
 "whether it be disbelief of his age and the caliber of music he has been making,
 or whether it be about how central he is to the growing visibility of the Duluth 
 music community, Jack seems like a hot topic"
-- david campbell, radio host at the current 89.3
+- david campbell, radio host at the mpr current 89.3
 
 "absentee is proof positive that all the hard work campbell poured into his music
 was worth it"
