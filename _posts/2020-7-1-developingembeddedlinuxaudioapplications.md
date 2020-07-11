@@ -157,7 +157,7 @@ such as [JACK](https://jackaudio.org/) you should consider that can make your li
 
 There is a succint but [useful writeup](http://equalarea.com/paul/alsa-audio.html) by the creator of JACK on how to 
 get started with simple ALSA applications, as well as [this article](https://soundprogramming.net/programming/alsa-tutorial-1-initialization/).
-You also may find useful the [Linux Kernal guide for writing an ALSA driver](kernel.org/doc/html/v4.10/sound/kernel-api/writing-an-alsa-driver.html).
+You also may find useful the [Linux Kernel guide for writing an ALSA driver](https://kernel.org/doc/html/v4.10/sound/kernel-api/writing-an-alsa-driver.html).
 
 If you got through this and your computer did some sounds, then you are ready to move on to compiling the 
 program for your embedded board!
