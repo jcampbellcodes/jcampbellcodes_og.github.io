@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Developing Audio Programs For Embedded Linux, Part 1
+title: DEVELOPING AUDIO PROGRAMS FOR EMBEDDED LINUX, PART 1
 date: 2020-7-1 04:01:00
 description: The first in a two part series about cross-compiling an ALSA program for an ARM board and hooking up an external I2S DAC.
 ---
@@ -157,6 +157,7 @@ such as [JACK](https://jackaudio.org/) you should consider that can make your li
 
 There is a succint but [useful writeup](http://equalarea.com/paul/alsa-audio.html) by the creator of JACK on how to 
 get started with simple ALSA applications, as well as [this article](https://soundprogramming.net/programming/alsa-tutorial-1-initialization/).
+You also may find useful the [Linux Kernal guide for writing an ALSA driver](kernel.org/doc/html/v4.10/sound/kernel-api/writing-an-alsa-driver.html).
 
 If you got through this and your computer did some sounds, then you are ready to move on to compiling the 
 program for your embedded board!
