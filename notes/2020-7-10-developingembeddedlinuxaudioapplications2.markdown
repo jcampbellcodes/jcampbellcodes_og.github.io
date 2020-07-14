@@ -1,7 +1,7 @@
 ---
 layout: post
 title: DEVELOPING AUDIO PROGRAMS FOR EMBEDDED LINUX, PART 2
-date: 2020-7-1 04:01:00
+date: 2020-7-10 04:01:00
 description: The second in a two part series about cross-compiling an ALSA program for an ARM board and hooking up an external I2S DAC.
 ---
 
@@ -15,7 +15,7 @@ Linux device trees, and ALSA configuration are all deep topics on their own. In 
 more in-depth articles, so hopefully this post can act as a jumping board for you to get more deep on this stuff. Let's start!
 
 # Set up the Beaglebone Black
-
+<br>
 Before anything, let's quickly make sure your Beaglebone Black is functional.
 
 The [official docs](https://beagleboard.org/getting-started) on how to set up the Beaglebone should get you to 
@@ -29,7 +29,7 @@ Also, as stated in the Beaglebone docs, always make sure you power down the boar
 you may end up needing to start the bring up process all over.
 
 ## What's in a circuit?
-
+<br>
 Before deep diving into anything, here is a high level overview of our circuit and data flow:
 - First, load our ALSA program (`booper`) onto the Beaglebone
 - This program connects to the default audio device, which is `plughw:Black,0` (you can find the available audio devices using `aplay -L`)
@@ -41,12 +41,12 @@ Or put another way, we are going to ask our Beaglebone to direct the audio from 
 audio as I2S, so that it can talk to our breakout board that speakers I2S. Before getting into any of that configuration, what is I2S?
 
 ## Communications Protocols are Key
-
+<br>
 One thing I've found from learning embedded systems is that communication protocols are a central topic for figuring out how to build things.
 After all, an embedded system is really just a hodgepodge of isolated (usually specialized) components talking to one another -- so how
 do they do it? They just send binary electrical signals to one another and agree on what they are supposed to mean!
 
-Different[communication protocols](https://learn.sparkfun.com/tutorials/serial-communication) have different tradeoffs -- 
+Different [communication protocols](https://learn.sparkfun.com/tutorials/serial-communication) have different tradeoffs -- 
 some require a bunch of wires and clock signals and might be more reliable or faster than others but require a ton of pin real estate, 
 while some might only require a single wire but are slower. Understanding and considering these tradeoffs is a key skill, so I would 
 recommend getting familiar with all the major communication protocols. The big ones are [UART](https://learn.sparkfun.com/tutorials/serial-communication),
@@ -54,11 +54,11 @@ recommend getting familiar with all the major communication protocols. The big o
 one focused on in this article, [I2S](https://hackaday.com/2019/04/18/all-you-need-to-know-about-i2s/). I2S has persevered for a long time
 as an audio protocol because it is simple and its tradeoffs are specially designed to work with high bandwidth (44kHz) stereo audio signals.
 
-
+- [asoc talk](https://www.youtube.com/watch?v=kb1yAt9d2k8)
 - [linux dai](https://www.kernel.org/doc/html/v4.10/sound/soc/dai.html)
 
 ## What is I2S?
-
+<br>
 - I chose I2S (Inter-IC Sound) protocol over USB or SPI mainly because it is yet another technology I have been meaning to learn and it leaves open 
 a USB port to be used by another input device (planning to use it for USB MIDI in a future project). That 
 said, it turns out I2S output on the Beaglebone Black is actually a little wonky. Unless you use an
@@ -71,6 +71,8 @@ helpful light upon.
 
 
 ## How do I get I2S audio out of my Beaglebone?
+<br>
+
 - in this case, we are more concerned with understanding Beaglebone's processor, the AM335x
 - don't be afraid of technical specs, pinouts, etc. They are dry and generally not beginner friendly,
 - but most of the time they will be your only life raft. So adapt to them!
