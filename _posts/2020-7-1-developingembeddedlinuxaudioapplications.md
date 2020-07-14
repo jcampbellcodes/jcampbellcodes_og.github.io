@@ -58,7 +58,8 @@ Before anything, you need to decide which type of host setup is best for your cr
 As it turns out, this decision is not particularly straightforward. One thing that is standard at least is that
 one will have an easier time using a Linux host -- macOS and Windows are possible as well, but when cross-compiling
 for embedded Linux (as opposed to a "bare metal" embedded system), using a non-Linux host further muddies an 
-already complicated process. 
+already complicated process. (Though on Windows, [VisualGDB for Visual Studio](https://visualgdb.com/tutorials/beaglebone/) seems like a promising cross compilation solution! 
+Never tried it personally so I can't vouch for it explicitly.)
 
 From there, if you have chosen to use Linux, you need to choose a Linux distro suitable for cross-compilation. 
 When it comes to cross compilation, not all distros are built equal-- historically, Debian was considered

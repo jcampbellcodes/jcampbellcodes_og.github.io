@@ -2,7 +2,7 @@
 layout: post
 title: C++ GAME AUDIO ENGINE PART 4 - HASHING OBJECTS
 date: 2017-04-16 10:13:00
-description: How to encode an identifier for an object as a unique hash to avoid using string IDs.
+description: How to encode an identifier for an object as a unique hash to avoid expensive string compares throughout an engine.
 ---
 
 All the articles in this series so far have been about components of software architecture and design, and this is a little more nitty gritty -- I want to talk about data hashing. This is a useful technique in a variety of contexts. 
