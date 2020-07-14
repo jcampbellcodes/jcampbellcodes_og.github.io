@@ -32,25 +32,33 @@ you may end up needing to start the bring up process all over.
 
 Before deep diving into anything, here is a high level overview of our circuit and data flow:
 - First, load our ALSA program (`booper`) onto the Beaglebone
-- This program connects to the default audio device, which is `plughw:Black,0` (you can find the default audio device using `aplay -L`)
+- This program connects to the default audio device, which is `plughw:Black,0` (you can find the available audio devices using `aplay -L`)
 - We read audio output from this device using the McASP enabled pins, which output the audio as an I2S data stream (this data is also being sent to the HDMI output, but we don't use that)
 - We connect these pins and power to the corresponding inputs of the I2S Digitial-to-Analog Converter (DAC) breakout board
 - The breakout board also includes an amplifier to bring the analog audio output to a reasonable amplitude before running it into the speaker
 
+Or put another way, we are going to ask our Beaglebone to direct the audio from our application to a particular audio device, which we will configure to output the
+audio as I2S, so that it can talk to our breakout board that speakers I2S. Before getting into any of that configuration, what is I2S?
+
 ## Communications Protocols are Key
 
-- what is a communication protocol and why are they important?
-- I2S, the communication protocol we are using in this article, is one of many
-- Understanding various protocols is key to designing embedded systems, because they are all useful in various scenarios
-- it's like knowing which data structure to use when
+One thing I've found from learning embedded systems is that communication protocols are a central topic for figuring out how to build things.
+After all, an embedded system is really just a hodgepodge of isolated (usually specialized) components talking to one another -- so how
+do they do it? They just send binary electrical signals to one another and agree on what they are supposed to mean!
+
+Different[communication protocols](https://learn.sparkfun.com/tutorials/serial-communication) have different tradeoffs -- 
+some require a bunch of wires and clock signals and might be more reliable or faster than others but require a ton of pin real estate, 
+while some might only require a single wire but are slower. Understanding and considering these tradeoffs is a key skill, so I would 
+recommend getting familiar with all the major communication protocols. The big ones are [UART](https://learn.sparkfun.com/tutorials/serial-communication),
+[I2C](https://learn.sparkfun.com/tutorials/i2c/all), [SPI](https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all), and the 
+one focused on in this article, [I2S](https://hackaday.com/2019/04/18/all-you-need-to-know-about-i2s/). I2S has persevered for a long time
+as an audio protocol because it is simple and its tradeoffs are specially designed to work with high bandwidth (44kHz) stereo audio signals.
+
 
 - [linux dai](https://www.kernel.org/doc/html/v4.10/sound/soc/dai.html)
 
-in general, here is an intro to serial communication
-- [serial communication, UART](https://learn.sparkfun.com/tutorials/serial-communication)
-
 ## What is I2S?
-- what is [I2S](https://hackaday.com/2019/04/18/all-you-need-to-know-about-i2s/)
+
 - I chose I2S (Inter-IC Sound) protocol over USB or SPI mainly because it is yet another technology I have been meaning to learn and it leaves open 
 a USB port to be used by another input device (planning to use it for USB MIDI in a future project). That 
 said, it turns out I2S output on the Beaglebone Black is actually a little wonky. Unless you use an
@@ -61,11 +69,6 @@ helpful light upon.
 
 - describe the signals and what they do
 
-### Other protocols to be aware of
-
-- check out other serial protocols: 
-- [I2C](https://learn.sparkfun.com/tutorials/i2c/all) 
-- [SPI](https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all)
 
 ## How do I get I2S audio out of my Beaglebone?
 - in this case, we are more concerned with understanding Beaglebone's processor, the AM335x
