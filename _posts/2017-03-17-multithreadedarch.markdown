@@ -16,7 +16,7 @@ from college. The thread boundaries are the part we are going to focus on here.
 There is a lot of gunk that goes on internally to make a game programmer feel like a superhero, and clearly most of the workload of the engine is on the audio thread. The communication between threads is an important issue that should be addressed early, since it affects the overall layout of your engine and allows you to add more complex calculations down the road such as convolution and FFTs without worry about lowering the FPS of the game.
 
 <br>
-# HOW TO SET UP A THREAD USING STL
+# How To Start Up A std::thread
 <br>
 There are many ways to skin this cat, so before talking about the architecture of the engine I want to go over my approach to configuring threads in this scenario. I like it because the locking is very contained; we will be using a special ring buffer whose pop and push methods have mutex locks around the data reads and writes of command objects, so each thread can safely submit commands and read commands knowing the data won't become compromised. For example, here is the pop of a ring buffer, used to check for command reads:
 

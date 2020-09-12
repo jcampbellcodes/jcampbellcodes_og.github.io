@@ -354,3 +354,26 @@ Bone common
 	};
 };
 ```
+
+sysfs files vs device drivers:
+sysfs drivers can be accessed through the filesystem, like LED and GPIOs, and serial lines like I2C are accessed through device nodes
+
+To use a driver from user-space, you need to "export" it from the kernel, either through the filesystem or by "exporting" a device tree overlay
+
+need to be able to discover the address of a peripheral -- either through device trees or C structures known as platform data
+
+the device tree configures the drivers you need
+
+how do you understand the bindings?
+
+try to start with the most generic driver possible -- ie simple_audio_card
+
+
+edits:
+- /etc/init.d/S35audio 
+    - `modprobe the snd_bcm2835` why do we have to do that? what is modules.dep or modules.conf
+- change config.txt to have `dtparam=i2s=on dtsparam=audio=on` -- what do these do? why do we need them?
+- how do we enable SSH? do a tutorial about how to edit the menuconfig of the kernel and the regular config
+- /etc/asound.conf
+    - why is it there and how do we use it 
+- "have to stray from the defconfig -- it turns everything off" -- we want/need the audio and ssh stuff
