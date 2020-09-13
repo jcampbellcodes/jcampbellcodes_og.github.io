@@ -14,6 +14,15 @@ This article, even moreso than the last, is going to have a lot of tangents. Com
 Linux device trees, and ALSA configuration are all deep topics on their own. In many instances I'm going to link to
 more in-depth articles, so hopefully this post can act as a jumping board for you to get more deep on this stuff. Let's start!
 
+### Materials
+<br>
+
+- Beaglebone Black
+- I2S DAC and audio amplifier. [This one from Sparkfun is cheap and works great!](https://www.sparkfun.com/products/14809)
+- Speaker (I got a 4" 8ohm speaker)
+- Jumper wires and breadboard
+- Host computer (mine was on Debian Stretch but it can work with others)
+
 # Set up the Beaglebone Black
 <br>
 Before anything, let's quickly make sure your Beaglebone Black is functional.
@@ -21,9 +30,9 @@ Before anything, let's quickly make sure your Beaglebone Black is functional.
 The [official docs](https://beagleboard.org/getting-started) on how to set up the Beaglebone should get you to 
 a place where you can run the code in this article. Make sure you can `ssh` into your board after following those
 instructions by invoking this command on your host, to which the Beaglebone is USB connected:
-```
+{% highlight bash %}
 ssh debian@beaglebone.local # default password is temppwd
-```
+{% endhighlight %}
 
 Also, as stated in the Beaglebone docs, always make sure you power down the board before unplugging it! Otherwise
 you may end up needing to start the bring up process all over.
@@ -40,48 +49,71 @@ Before deep diving into anything, here is a high level overview of our circuit a
 Or put another way, we are going to ask our Beaglebone to direct the audio from our application to a particular audio device, which we will configure to output the
 audio as I2S, so that it can talk to our breakout board that speakers I2S. Before getting into any of that configuration, what is I2S?
 
-## Communications Protocols are Key
+# Communications Protocols are Key
 <br>
 One thing I've found from learning embedded systems is that communication protocols are a central topic for figuring out how to build things.
 After all, an embedded system is really just a hodgepodge of isolated (usually specialized) components talking to one another -- so how
-do they do it? They just send binary electrical signals to one another and agree on what they are supposed to mean!
+do they do it? They send electrical data signals to one another and agree on what they are supposed to mean!
 
 Different [communication protocols](https://learn.sparkfun.com/tutorials/serial-communication) have different tradeoffs -- 
 some require a bunch of wires and clock signals and might be more reliable or faster than others but require a ton of pin real estate, 
-while some might only require a single wire but are slower. Understanding and considering these tradeoffs is a key skill, so I would 
+while others might only require a single wire but are slower. Understanding and considering these tradeoffs is a key skill, so I would 
 recommend getting familiar with all the major communication protocols. The big ones are [UART](https://learn.sparkfun.com/tutorials/serial-communication),
 [I2C](https://learn.sparkfun.com/tutorials/i2c/all), [SPI](https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi/all), and the 
 one focused on in this article, [I2S](https://hackaday.com/2019/04/18/all-you-need-to-know-about-i2s/). I2S has persevered for a long time
 as an audio protocol because it is simple and its tradeoffs are specially designed to work with high bandwidth (44kHz) stereo audio signals.
 
-- [asoc talk](https://www.youtube.com/watch?v=kb1yAt9d2k8)
-- [linux dai](https://www.kernel.org/doc/html/v4.10/sound/soc/dai.html)
-
 ## What is I2S?
 <br>
-- I chose I2S (Inter-IC Sound) protocol over USB or SPI mainly because it is yet another technology I have been meaning to learn and it leaves open 
-a USB port to be used by another input device (planning to use it for USB MIDI in a future project). That 
-said, it turns out I2S output on the Beaglebone Black is actually a little wonky. Unless you use an
-external clock, you are limited to the 48kHz family of sample rates ([see here](https://hifiduino.wordpress.com/2014/03/10/beaglebone-black-for-audio/)). 
-This was fine for my purposes, but it is an unfortunate drawback. The I2S pins are mainly used for the HDMI output, which 
-[this article](https://www.raspberry-pi-geek.com/Archive/2013/02/HDMI-and-the-BeagleBone-Black-Multimedia-Environment) sheds some
-helpful light upon.
 
-- describe the signals and what they do
+A solid and simple overview of I2S can be found [here](https://hackaday.com/2019/04/18/all-you-need-to-know-about-i2s/). I chose it for this project
+because it is an industry standard for digital audio transmission between ICs and is well suited to the  high data rates in a stereo audio signal.
+Another common way to get audio out of the Beaglebone is over USB using a USB DAC, but eventually I wanted to add USB MIDI support to a small program
+and I'd rather still have the USB port open. So I2S it was!
+
+<figure>
+  <img class="col center" src="/img/i2s.png">
+  <figcaption>The three components that make up an I2S signal</figcaption>
+</figure>
+
+That figure was taken from the [official Phillips I2S spec](https://www.sparkfun.com/datasheets/BreakoutBoards/I2SBUS.pdf). 
+> I would recommend reading the spec -- it's just a few pages because it's very simple as far as specs go! USB for example is way hairier... getting comfortable with reading technical specs is a key skill in embedded software development.
+
+The protocol is made up of:
+- Continuous Serial Clock (SCK): This is the clock signal that keeps all the bits in sync according to the desired sample rate.
+- Word Select (WS, sometimes LRCLK): Since the audio line can contain data for the left or right channels, this clock describes which channel is currently being transmitted (low means left channel and high is right)
+- Serial data (SD):  This pin will have the actual audio data for the left and right channels.
+
+> I2S docs and this article use the nomenclature "left and right channels", but in practice you can implement higher channel counts like 5.1 and 7.1 by adding additional I2S buses.
+
+One drawback of the I2S audio output on the Beaglebone is that the on-board clock only supports the 48kHz family of sample rates (so if you want 44.1kHz or multiples of
+that, you'll need to set up your own external clock). [See here](https://hifiduino.wordpress.com/2014/03/10/beaglebone-black-for-audio/) for more details
+on why that is. The I2S outputs are pretty easy to get at, because they are also used for the HDMI output, which has a handy writeup 
+[here](https://www.raspberry-pi-geek.com/Archive/2013/02/HDMI-and-the-BeagleBone-Black-Multimedia-Environment).
 
 
 ## How do I get I2S audio out of my Beaglebone?
 <br>
 
-- in this case, we are more concerned with understanding Beaglebone's processor, the AM335x
-- don't be afraid of technical specs, pinouts, etc. They are dry and generally not beginner friendly,
-- but most of the time they will be your only life raft. So adapt to them!
-- A good way to learn about a board's quirks is to mess with various serial protocols on 
-- the boards. Also! don't be afraid of computer specs. Similar to math equations, it's not 
-- immediately natural to convert these to "english" in your mind. But it's important to fight the
-- urge to skip over part numbers when reading, because that helps you make connections. Ie the Beaglebone
-- uses the TI AM335x microcontroller -- you will find a lot of docs about this chip that aren't beaglebone specific
-- and you need to be able to grok these without relying on the article talking specifically about the beaglebone
+Now that we know what I2S audio is, we have to figure out how to access the I2S audio output of the Beaglebone.
+Full disclosure: since HDMI output is enabled by default on the Beaglebone, the I2S pins are actually already enabled on a factory
+configured Beaglebone! But I wanted to dig into where that configuration lives and how you could conceivably apply this investigation
+to any embedded Linux board.
+
+# A note on maneuvering an info search
+
+When I was initially looking around for info on how audio works on the Beaglebone, I found that it helped to directly look at
+how resources about the Beaglebone's processor, the AM335x Sitara. The Beaglebone has a fair number of resources, but especially
+if you are working with a less common platform, you may have a very hard time limiting yourself to the platform. I was tempted for awhile
+to gloss over the processor itself, but using it in my Google searches for technical specs and help articles turned out to be really important.
+Technical specs tend to be very dry and hard to understand for beginners, but you won't be able to run away from them forever -- so 
+I recommend embracing them early on to answer your questions that come up!
+
+
+
+Section on what a DAI is and how to determine what the DAI for your board is
+- [asoc talk](https://www.youtube.com/watch?v=kb1yAt9d2k8)
+- [linux dai](https://www.kernel.org/doc/html/v4.10/sound/soc/dai.html)
 
 - so we know we want i2s out -- how do we get there? this is where you start to do some archaeology...
 - knowing the terms to search is how you bootstrap this
@@ -94,7 +126,7 @@ helpful light upon.
 - Checkout [beaglebone pinout](https://microcontrollerslab.com/beaglebone-black-pinout-pin-configuration-features-applications/#MCASP_Pins)
 - or the [reference manual](https://github.com/beagleboard/beaglebone-black/wiki/System-Reference-Manual)
 
-The pins on the beaglebone can be used for multiple things -- we have to manually configurethese pins to be in "i2s mode". 
+The pins on the beaglebone can be used for multiple things -- we have to manually configure these pins to be in "i2s mode". 
 This is called "multiplexing", or "muxing".
 - We need a way to tell the beaglebone we want those pins to be i2s (multiplex them)
 - enable and configure the McASP device as our i2s output
