@@ -2,8 +2,13 @@
 layout: post
 title: DEVELOPING AUDIO PROGRAMS FOR EMBEDDED LINUX, PART 1.5
 date: 2020-9-13 04:01:00
-description: Better building. Expands on the first article by using a different board and a more robust build process.
+description: Board bringup. Expands on the first article by using a different board and a more robust build process.
 ---
+
+<figure>
+  <img class="col center" src="/img/rpi/hamburger.jpg">
+  <figcaption>Pi with Hamburger... yum?</figcaption>
+</figure>
 
 After writing the first article in this mini embedded audio series, I got a fair bit into the "part 2" article
 that's going to be about configuring ALSA and device drivers to output I2S audio before I got
@@ -16,8 +21,8 @@ steps worked before I published anything.
 
 So I read a [book](https://www.packtpub.com/product/mastering-embedded-linux-programming/9781784392536)! (And after
 reading, I definitely recommend it. Was great glue for my fractured understanding about a lot of this stuff.) 
-And after reading that book, I thought I'd revisit the content of my first article and go through a "better" way
-to develop embedded Linux (audio) applications, closer to how things are done in ~The Industry~.
+And after reading that book, I thought I'd revisit the content of my first article and go through a better way
+to develop embedded Linux (audio) applications, closer to how things are done in the industry.
 
 And finally, to cast a wider net, I'm going to take a break from the Beaglebone connected over SSH (if you want Beaglebone specific steps, check out that book above!) and instead use the Raspberry Pi 4 over UART using our very own custom
 Linux system and toolchain made using Buildroot. Let's start!
@@ -25,7 +30,7 @@ Linux system and toolchain made using Buildroot. Let's start!
 # Materials
 <br>
 
-- [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/) (I used the rpi4 model B, but should work with all of them)
+- [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/) (I used the Raspberry Pi 4 model B, but should work with all of them)
 - Raspberry Pi 5v power adapter
 - [USB to TTL Serial Cable](https://www.sparkfun.com/products/12977) for talking UART
 - Host machine. I used a Mac running latest Ubuntu via VirtualBox.
@@ -45,8 +50,8 @@ Linux system and toolchain made using Buildroot. Let's start!
 # What will we be building?
 <br>
 
-Similar to the last article, we will be cross-compiling the little ALSA toy program from the [last article](2020/07/01/developingembeddedlinuxaudioapplications.html), but this time we will also be building our own cross compile toolchain,
-root filesystem, kernel image, and bootloader as well. Last time we used Debian's multiarch tools and relied on the "out of the box" Debian image provided by Beaglebone.org, but this approach
+Similar to the [last article](2020/07/01/developingembeddedlinuxaudioapplications.html), we will be cross-compiling the little ALSA toy program `booper`, but this time we will also be building our own cross compile toolchain,
+root filesystem, kernel image, and bootloader as well. Last time we used Debian's multiarch tools and relied on the "out of the box" Debian image provided by Beagleboard.org, but this approach
 has several advantages over that:
 - Much more flexibility in which OS your host is running
 - Easier to reason about what components are needed for your board -- it can easily be regenerated fresh
@@ -73,18 +78,15 @@ git clone git://git.buildroot.net/buildroot
 cd buildroot
 {% endhighlight %}
 
-> Tip: If you have issues with building later, you might want to consider checking out a particular stable release branch and see if that resolves the issue.
+> Tip: If you have issues with building later on, you might want to consider checking out a particular stable release branch and see if that resolves the issue.
 
 Then before anything else, make sure you download all the dependencies as enumerated in the [Buildroot docs](https://buildroot.org/downloads/manual/manual.html#requirement-mandatory). 
-
-Those docs have a lot of good information about what the various parts of the repo are for and how to use Buildroot, definitely
-worth at least a skim. Things you'll want to look out for are about the toolchain, various make commands, and when you need to clean the repo.
 
 # Configure for Raspberry Pi 4 64-bit
 <br>
 
 Now that you've got the Buildroot repo, you can begin configuring it to build images that are compatible with your board.
-You could in theory do this all by hand, but luckily most boards (including both the Rpi and BeagleBone) have "default 
+You could in theory do this all by hand, but luckily most boards (including both the Raspberry Pi and BeagleBone) have "default 
 configurations", or `defconfig`s that can be used as a starting point, upon which you can make further customizations.
 
 To see all the available defconfigs that folks have made in the mainline, run:
@@ -93,7 +95,7 @@ To see all the available defconfigs that folks have made in the mainline, run:
 make list-defconfigs
 {% endhighlight %}
 
-The one we will be using is the config for the Rpi4 in 64-bit mode, `raspberrypi4_64_defconfig`.
+The one we will be using is the config for the Raspberry Pi 4 in 64-bit mode, `raspberrypi4_64_defconfig`.
 
 > Will mention more later, but note that these configs are generally the least amount of configuration possible
 > in order to get a working image on your hardware. Every feature/library you want to add (audio, SSH, UART, python)
@@ -120,7 +122,7 @@ In order to open the menuconfig interface, run:
 make menuconfig
 {% endhighlight %}
 
-> As a side note, you can customize indivudual projects that Buildroot builds separately such as the kernel, U-Boot, Barebox, etc. Run `make help` to see which ones you can choose from.
+> As a side note, you can customize individual projects that Buildroot builds separately such as the kernel, U-Boot, Barebox, etc. Run `make help` to see which ones you can choose from.
 
 # Customize Config to Work With ALSA
 <br>
@@ -133,6 +135,9 @@ will be included on the target device.
 
 When you run `make menuconfig`, you will end up on this screen.
 
+This little walkthrough below is meant to illustrate the workflow for menuconfig/Kconfig. Some options
+depend on other options and you may find yourself going around a bit to make everything right.
+
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/1_target_packages.png">
   <figcaption>Initial Kconfig Screen</figcaption>
@@ -142,22 +147,22 @@ First we will go look at "Target packages", which is the section where you can d
 applications and libraries ("packages") that Buildroot will download and build for installation
 on your target board and in some cases in your cross-compilation toolchain.
 
-First let's go look at audio applications.
+After selecting Target Packages, go look under audio applications:
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/2_audio_apps.png">
   <figcaption>Under Target Packages, see Audio Apps</figcaption>
 </figure>
 
-Under here we see alsa-utils is already selected -- but if you inspect further...
+Under here we see alsa-utils is already selected -- but if you inspect further,
+many of the utils are actually unselected by default.
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/3_alsa_utils.png">
   <figcaption>ALSA Utils Looks To Be Selected...</figcaption>
 </figure>
 
-Many of the utils are actually unselected by default. We won't need all of these, but 
-in development, some of them will be useful (especially `aplay` and `speaker-test`).
+We won't need all of these, but  in development, some of them will be useful (especially `aplay` and `speaker-test`).
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/4_needs_wchar_support.png">
@@ -165,16 +170,17 @@ in development, some of them will be useful (especially `aplay` and `speaker-tes
 </figure>
 
 Also, you can see that `amixer` requires another option to be selected! Let's assume we want that
-application (could be helpful). First, go back to the main screen by hitting selecting `Exit`
-with the left/right keys. `Exit` is more like a "back" button, until you get to the main screen;
-at that point, `Exit` will prompt a "Save?" dialog.
+application. First, go back to the main screen by hitting selecting `Exit`
+with the left/right keys. 
+> `Exit` is more like a "back" button, until you get to the main screen;
+> at that point, `Exit` will prompt a "Save?" dialog.
+
+So go back to the main screen and see the toolchain options.
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/5_toolchain_options.png">
   <figcaption>Go back to the main screen, to Toolchain</figcaption>
 </figure>
-
-So go back to the main screen and see the toolchain options.
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/6_enable_wchar.png">
@@ -183,35 +189,33 @@ So go back to the main screen and see the toolchain options.
 
 This is where you can enable WCHAR support in the toolchain with `y`.
 
+Now navigate back to where you were and select whichever utils you want.
+
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/7_alsa_utils.png">
   <figcaption>Go back to alsa-utils, enable these and/or others if desired</figcaption>
 </figure>
 
-Now navigate back to where you were and select whichever utils you want.
+From there, exit up one level -- we just looked at applications, but "Libraries" shows the packages
+that our programs will link against/include/etc. These are the libraries that will be both in your toolchain and on the 
+target device.
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/8_target_libraries.png">
   <figcaption>Go up a level and find "Libraries"</figcaption>
 </figure>
 
-Go up one level -- we just looked at applications, but "Libraries" may be more
-important. These are the libraries that will be both in your toolchain and on the 
-target device.
+
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/9_audio_libs.png">
   <figcaption>Go under Audio/Sound</figcaption>
 </figure>
 
-Go under Audio/Sound...
-
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/10_alsa_lib.png">
   <figcaption>Check out alsa-lib</figcaption>
 </figure>
-
-And alsa-lib...
 
 <figure>
   <img class="col center" src="/img/rpi/menuconfig/11_all_there.png">
@@ -223,9 +227,6 @@ that depend on these libraries anyway. If you wanted to forego the ALSA command 
 and only include the libraries that your ALSA app will need, you could just come here straight from
 the beginning.
 
-This little walkthrough was meant to illustrate the workflow for menuconfig/Kconfig. Some options
-depend on other options and you may find yourself going around a bit to make everything right.
-
 When you are ready to save, `Exit` to the main page and say "yes" to saving. Now your `.config` file
 in the Buildroot directory, which was generated initially by `raspberrypi4_64_defconfig`, includes
 your local customizations. Before we start the build, there is one more series of customizations to make
@@ -233,7 +234,7 @@ in order to get audio to work on the Pi.
 
 Before getting into those customizations, there is a question we should answer...
 
-## How does an embedded Linux system start up?
+# How does an embedded Linux system start up?
 <br>
 
 There are [other](https://en.wikipedia.org/wiki/Linux_startup_process), [better](https://buildroot.org/downloads/manual/manual.html#_init_system) resources that explain in general how embedded systems bootstrap themselves. For our purposes, it may
@@ -249,7 +250,7 @@ programs called [daemons](https://en.wikipedia.org/wiki/Daemon_(computing)) at v
 whether to wait for the program's completion or fire it off asynchronously and just continue on.
 
 This script also, by convention, calls user-defined boot scripts that we can use to enable the Raspberry Pi audio kernel module,
-`snd_bcm2835` at boot time so it will show up as an ALSA device. The convention for these scripts are that they live under 
+`snd_bcm2835`, at boot time so it will show up as an ALSA device. The convention for these scripts are that they live under 
 `/etc/init.d/S[0-100]your_script_name`, and they will be fired off in the order of their number field. To configure our Pi sound
 kernel module, we will generate a shell script named `/etc/init.d/S35audio`.
 
@@ -262,7 +263,7 @@ want to load, like the USB audio module; you can check out the available audio-r
 `modprobe -l snd_*` on the board. 
 
 
-## Board Specific Build Scripts
+# Board Specific Build Scripts
 <br>
 
 With that background in mind, we have to find a way to tell Buildroot how to put these scripts in place for us. 
@@ -410,7 +411,7 @@ set it to `board/raspberrypi4-64/rootfs_overlay`.
 From here, you can run `make` again. And don't worry, since this is just an addition to the root filesystem,
 the build should be much quicker (a few seconds).
 
-# Addition: Run "booper" on startup
+# Run "booper" on startup
 <br>
 
 The last thing I want to mention before sending this image to the board is how you could run the `booper` program
@@ -438,6 +439,11 @@ BeagleBoard.org recommends for flashing SD card in their docs, so it has cred!)
 
 Once downloaded, plug in your SD card. The image for the card should be output to the `output/images/sdcard.img` file by default
 thanks to the `genimage` scripts in the Raspberry Pi board support package.
+
+<figure>
+  <img class="col center" src="/img/rpi/etcher-1.png">
+  <figcaption>Hook up ground to ground, cable Tx to Pi Rx, and cable Rx to Pi Tx</figcaption>
+</figure>
 
 Now that the SD card is ready to be inserted into the Pi, there is one last part to figure out...
 
@@ -468,7 +474,10 @@ Next, you need to run a program on your host to be able to talk UART. On macOS, 
 1. On your host, run `ls /dev/tty*`. This will list all of the available tty devices available to your Mac.
 2. Connect the USB end of the cable to your host.
 3. Run `ls /dev/tty*` again and compare this output to the last output; hopefully a new device popped up, something like `/dev/tty.usbserial-AB0JTTYI`
-4. Knowing that device, and assuming a baud rate of 115200, run the `screen` program like so: `sudo screen /dev/tty.usbserial-AB0JTTYI 115200`
+4. Knowing that device, and assuming a baud rate of 115200, run the `screen` program like so:
+{% highlight bash %}
+sudo screen /dev/tty.usbserial-AB0JTTYI 115200
+{% endhighlight %}
 
 # Run the bloops
 <br>
@@ -483,7 +492,7 @@ Now you should be ready to insert the SD card and power up the Pi! Here are the 
 If you enabled `booper` to be played on boot, you should hear it booping! Otherwise, you can run the program by hand
 after logging in:
 {% highlight bash %}
-/usr/bin/booper
+booper
 {% endhighlight %}
 
 And that's it! A lot of info piled into this article, but that's why I wanted to write it. Once you go through
@@ -492,6 +501,7 @@ applications for custom Linux systems. In the next article I'll be going back to
 device trees, communication protocols, and how outputting audio over I2S works in embedded systems.
 
 # Acknowledgements
+<br>
 
 Thanks Archie3D from TheAudioProgrammer Discord for the tips on enabling the BCM2835 audio kernel module with the 
 BusyBox init scripts as well as a simple ALSA config file.
