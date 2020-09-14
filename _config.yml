@@ -2,7 +2,7 @@
 title: jack campbell - audio programmer
 email: jackcampbell@acm.org
 description: > # this means to ignore newlines until "baseurl:"
-  portfolio site + blog
+  audio software blog
 baseurl:  # the subpath of your site, e.g. /blog/
 url:  # the base hostname & protocol for your site
 twitter_username: jc_bloops
