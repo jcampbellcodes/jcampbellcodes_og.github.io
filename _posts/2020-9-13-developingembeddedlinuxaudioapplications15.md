@@ -50,7 +50,7 @@ Linux system and toolchain made using Buildroot. Let's start!
 # What will we be building?
 <br>
 
-Similar to the [last article](2020/07/01/developingembeddedlinuxaudioapplications.html), we will be cross-compiling the little ALSA toy program `booper`, but this time we will also be building our own cross compile toolchain,
+Similar to the [last article](/2020/06/30/developingembeddedlinuxaudioapplications.html), we will be cross-compiling the little ALSA toy program `booper`, but this time we will also be building our own cross compile toolchain,
 root filesystem, kernel image, and bootloader as well. Last time we used Debian's multiarch tools and relied on the "out of the box" Debian image provided by Beagleboard.org, but this approach
 has several advantages over that:
 - Much more flexibility in which OS your host is running
