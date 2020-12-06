@@ -11,7 +11,7 @@ description: The second in a two part series about cross-compiling an ALSA progr
 </figure>
 
 
-In my [first embedded Linux post](2020/07/01/developingembeddedlinuxaudioapplications.html), we covered how to write a dead-simple ALSA driver and cross compile it for an ARM embedded device.
+In my [first embedded Linux post](/2020/06/30/developingembeddedlinuxaudioapplications.html), we covered how to write a dead-simple ALSA driver and cross compile it for an ARM embedded device.
 Next, we need to figure out how to configure I2S audio to come out on pins from the Beaglebone,
 hook those pins up to our external DAC and audio amplifier, deploy our cross compiled ALSA program to our Beaglebone, and
 run the thing!
