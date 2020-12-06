@@ -1,7 +1,7 @@
 ---
 layout: post
 title: DEVELOPING AUDIO PROGRAMS FOR EMBEDDED LINUX, PART 2
-date: 2020-12-5 04:01:00
+date: 2020-12-6 04:01:00
 description: The second in a two part series about cross-compiling an ALSA program for an ARM board and hooking up an external I2S DAC.
 ---
 
