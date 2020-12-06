@@ -143,7 +143,7 @@ Beaglebone's [system reference manual](https://github.com/beagleboard/beaglebone
 I soon found via [this resource](https://microcontrollerslab.com/beaglebone-black-pinout-pin-configuration-features-applications/#MCASP_Pins)
 which pins could be set to output I2S. However, those pins can do more than just output I2S (they can be GPIOs, SPI, or PWM as well). 
 
-Here is a quick table for whicher pins (all on the P9 header) we will need to connect to our I2S breakout:
+Here is a quick table for which pins (all on the P9 header) we will need to connect to our I2S breakout:
 
 {% highlight bash %}
 BBB Description	    Header pin      	Description
@@ -161,7 +161,7 @@ So how do we get audio out of them?
 For a general purpose dev board like a Beaglebone, there are a ton of different ways one might want to use the pins and fairly
 limited physical space. To solve this problem, embedded SoCs will allow for the same pin to be connected in different ways
 via configuration in software via a technique called "pin multiplexing", or "muxing". The same exact physical pin can be set to
-connect to the audio interface and output a bit clock or instead be configured as a GPIO.  On the Beaglebone Black, there are
+connect to the audio interface and output a bit clock or instead be configured as a [GPIO](https://www.ics.com/blog/introduction-gpio-programming).  On the Beaglebone Black, there are
 almost 69 I/O pins on the device but the rest of them can also be used for other predefined functions.
 
 > For context, if size wasn't an issue, we wouldn't need pin multiplexing -- we could just have a pin for every signal we wanted 
@@ -175,20 +175,20 @@ user space (as opposed to [kernel space](https://unix.stackexchange.com/question
 
 ### Linux Device Tree
 <br>
-The Linux device tree became popularized over the last decade as a way to get unneeded hardware specifics out of the Linux
+The [Linux device tree](https://www.kernel.org/doc/html/latest/devicetree/usage-model.html) became popularized over the last decade as a way to get unneeded hardware specifics out of the Linux
 kernel and instead describe available hardware peripherals in a modular file known as a "device tree blob" loaded by the kernel
 at runtime. The source for a device tree looks a lot like C source code, and has
-borrowed features from C such as include files. Device trees are also loaded in a "layered" fashion, such that a core device 
+borrowed features from C such as include files. Device trees are loaded in a hierarchical fashion, such that a core device 
 tree file is defined and parts of it can be overridden by other files known as "device tree overlays". The device tree is 
 a pretty complex topic and I recommend reading other articles about it that explain more in depth, like the [Raspberry Pi's 
 article on them](https://www.raspberrypi.org/documentation/configuration/device-tree.md). There are also great articles
-at ofitselfso.com about [the device tree overall on the BBB](http://www.ofitselfso.com/BeagleNotes/Beaglebone_Black_And_Device_Tree_Overlays.php) and [using the device tree to configure pinmux](http://www.ofitselfso.com/BeagleNotes/BeagleboneBlackPinMuxModes.php). Device tree source files have a `.dts` extension, so you can learn a lot by
+at [Of Itself So](https://www.ofitselfso.com/) about [the device tree overall on the BBB](http://www.ofitselfso.com/BeagleNotes/Beaglebone_Black_And_Device_Tree_Overlays.php) and [using the device tree to configure pinmux](http://www.ofitselfso.com/BeagleNotes/BeagleboneBlackPinMuxModes.php). Device tree source files have a `.dts` extension, so you can learn a lot by
 `grep`ing for this on your board to see what's available, or in the Linux kernel to see what device tree overlays are available
 upstream.
 
 Two good audio-specific device tree overlays that you should digest are the [BBB AudioCape](https://github.com/beagleboard/bb.org-overlays/blob/master/src/arm/BB-BONE-AUDI-02-00A0.dts) and the [Bela](https://github.com/beagleboard/bb.org-overlays/blob/master/src/arm/BB-BELA-B2.dts) device tree overlay.
 
-In general, you shouldn't need to edit device tree overlays yourself in many use cases, at least on platforms like BBB and
+You shouldn't need to edit device tree overlays yourself in many use cases, at least on platforms like BBB and
 Raspberry Pi -- these platforms have a ton of community device tree overlays written and available, and have external parameters
 exposed (`dtparam`s) that are available in board-specific configuration files read at boot time for configuring the device tree
 overlays, such as `uEnv.txt` on BBB and `config.txt` on the Raspberry Pi.
@@ -255,7 +255,9 @@ fragment@0 {
     target = <&am33xx_pinmux>;
     __overlay__ {
 
-        /* The AudioCape also reserves I2C pins because they want to use the onboard AIC31 codec, which is controlled by I2C.
+        /* The AudioCape also reserves I2C pins because 
+           they want to use the onboard AIC31 codec, which 
+           is controlled by I2C.
            Not all DT overlays will do this. */
         i2c2_pins: pinmux_i2c2_pins {
             pinctrl-single,pins = <
@@ -264,7 +266,9 @@ fragment@0 {
             >;
         };
 
-        /* This is where the McASP pins are muxed. Expect to see many variations on this for various capes with different needs. */
+        /* This is where the McASP pins are muxed. Expect 
+           to see many variations on this for various capes 
+           with different needs. */
         bone_audio_cape_audio_pins: pinmux_bone_audio_cape_audio_pins {
             pinctrl-single,pins = <
                 0x1ac 0x00      /* mcasp0_ahclkx,       P9_25 | MODE0 | OUTPUT_PULLDOWN (high frequency bit clock) */
@@ -284,6 +288,11 @@ One aspect of the BBB audio driver we haven't gone over in depth is the built-in
 symlink/tlv320aic31.pdf) (analog interface chip 31), which is controlled over I2C. In the DT, we just need to make sure that its
 I2C controller is enabled. Here is an architecture diagram to show how the AIC3 and McASP port interact.
 
+<figure>
+  <img class="col center" src="/img/embedded_2/asoc_architecture.png">
+  <figcaption>Architecture diagram from TI Docs for the AM335x Audio Driver</figcaption>
+</figure>
+
 I'm not sure whether setting up the TI audio codec is actually needed if you are using an external codec (I suspect not?)
 but I'm including this section to describe why this particular DT overlay for the audio cape is configuring
 I2C pins and the tlv320aic3x in the first place.
@@ -299,11 +308,6 @@ Here is TI's description via [their wiki](https://processors.wiki.ti.com/index.p
 > system such as the AIC31 codec. It provides a direct interface to industry standard codecs, analog interface chips (AICs) and  
 > other serially connected A/D and D/A devices.
 > The AIC31 audio module is controlled by internal registers that can be accessed by the high speed I2C control interface.
-
-<figure>
-  <img class="col center" src="/img/embedded_2/asoc_architecture.png">
-  <figcaption>Architecture diagram from TI Docs for the AM335x Audio Driver</figcaption>
-</figure>
 
 {% highlight c %}
 fragment@1 {
@@ -326,7 +330,8 @@ equivalent to the above but less compatible with some older parsers. Useful to b
 just another fragment.
 
 {% highlight c %}
-/* This is equivalent to the fragment shown above */
+/* This is equivalent to the fragment 
+   shown above */
 &i2c2 {
     #address-cells = <1>;
     #size-cells = <0>;
@@ -377,16 +382,17 @@ TI has some info about these bindings [here](https://git.ti.com/cgit/ti-linux-ke
 In this case, we are configuring sound for an [ocp](http://www.ofitselfso.com/BeagleNotes/BeagleboneBlackPinMuxModes.php) ("On-Chip Peripheral") node.
 
 {% highlight c %}
-/* Note the number after the fragment. In a DT overlay, make sure these fragments are laid out in order or some may be missed
-by the parser. */
+/* Note the number after the fragment. In a DT overlay, 
+  make sure these fragments are laid out in order or 
+  some may be missed by the parser. */
 fragment@3 {
     target = <&ocp>;
     __overlay__ {
         sound {
             compatible = "ti,da830-evm-audio";
             ti,model = "DA830 EVM";
-            ti,audio-codec = <&tlv320aic3x>;
-            ti,mcasp-controller = <&mcasp0>;
+            ti,audio-codec = <&tlv320aic3x>; /* Connecting the codec from above */
+            ti,mcasp-controller = <&mcasp0>; /* Connecting the McASP defined above */
             ti,codec-clock-rate = <12000000>;
             ti,audio-routing =
                 "Line Out",             "LLOUT",
