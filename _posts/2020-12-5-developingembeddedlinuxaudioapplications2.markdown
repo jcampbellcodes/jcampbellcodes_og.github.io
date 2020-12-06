@@ -7,7 +7,7 @@ description: The second in a two part series about cross-compiling an ALSA progr
 
 <figure>
   <img class="col center" src="/img/embedded_2/gordobone.jpg">
-  <figcaption>The legendary Gordobone</figcaption>
+  <figcaption>The fabled Gordobone, named after my Beagle-mix :) </figcaption>
 </figure>
 
 
@@ -407,7 +407,7 @@ fragment@3 {
 <br>
 
 As stated earlier, you probably won't need to be editing those files directly most of the time. The way that most users
-interact with the device tree is by "exporting" (activating) a device tree overlay at runtime. Derek Molloy has a 
+interact with the device tree is by "exporting" (activating) various device tree overlays at runtime. Derek Molloy has a 
 [great tutorial](http://derekmolloy.ie/beaglebone/beaglebone-gpio-programming-on-arm-embedded-linux/) on how to do this, 
 as does [Adafruit](https://learn.adafruit.com/introduction-to-the-beaglebone-black-device-tree/device-tree-overlays).
 
@@ -455,7 +455,7 @@ First, we need to connect the Beaglebone pins we muxed to the inputs of the brea
 > switched around based on what was documented in the device tree overlay I was using. So even though P9_30 is supposed
 > to be the output, I was actually seeing audio output from P9_28, the supposed audio input!
 > This is a case where having a logic analyzer is handy, because you can visualize what is coming out of each pin. 
-> Your mileage may vary, so if P9_28 doesn't work, try P9_30.
+> Your mileage may vary, so if P9_28 doesn't work, try P9_30 for audio output.
 
 {% highlight bash %}
 BBB pin     MAX98357A Pin    Description
@@ -470,6 +470,8 @@ P9_03       VDD              Power from BBB to breakout (3.3V).
   <img class="col center" src="/img/embedded_2/bbb_closeup.jpg">
   <figcaption>Close up of BBB pin outputs</figcaption>
 </figure>
+
+I also used a resistor to VDD to set the gain of the breakout board per their docs, but this is optional.
 
 <figure>
   <img class="col center" src="/img/embedded_2/breakout_closeup.jpg">
@@ -487,7 +489,7 @@ a +/- connection to a speaker. Analog audio is susceptible to noise, so the shor
   <figcaption>BBB to breakout to speaker</figcaption>
 </figure>
 
-From here, you can do a quick test with the built-in on Linux, `speaker-test -t sine`.
+From here, you can do a quick test with the built-in program on Linux, `speaker-test -t sine`.
 
 # Make a sound!
 <br>
