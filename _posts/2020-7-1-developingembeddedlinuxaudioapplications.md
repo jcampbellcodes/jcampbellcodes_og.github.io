@@ -31,6 +31,11 @@ A following post will detail how to set up the circuit, enable peripherals in em
 and explain how I2S audio output on the Beaglebone works -- originally that was going to be part of this post, but it turns
 out that stuff is quite the deep dive!
 
+UPDATE 12-5-2020: For longer term projects, using an embedded build system like Yocto or Buildroot is way easier 
+to maintain than ad-hoc cross compilation using something like Debian multiarch. See the [next post](/2020/09/12/developingembeddedlinuxaudioapplications15.html) on board bringup for 
+more info on that approach -- though this article still has some important background information about cross compilation
+in general.
+
 ### Materials
 <br>
 - Beaglebone Black
@@ -58,8 +63,7 @@ Before anything, you need to decide which type of host setup is best for your cr
 As it turns out, this decision is not particularly straightforward. One thing that is standard at least is that
 one will have an easier time using a Linux host -- macOS and Windows are possible as well, but when cross-compiling
 for embedded Linux (as opposed to a "bare metal" embedded system), using a non-Linux host further muddies an 
-already complicated process. (Though on Windows, [VisualGDB for Visual Studio](https://visualgdb.com/tutorials/beaglebone/) seems like a promising cross compilation solution! 
-Never tried it personally so I can't vouch for it explicitly.)
+already complicated process. (Though on Windows, [VisualGDB for Visual Studio](https://visualgdb.com/tutorials/beaglebone/crosscompiler/) seems like a promising cross compilation solution!)
 
 From there, if you have chosen to use Linux, you need to choose a Linux distro suitable for cross-compilation. 
 When it comes to cross compilation, not all distros are built equal-- historically, Debian was considered
@@ -69,8 +73,9 @@ support has made it a much more viable option, allowing you to install ARM syste
 libraries in `/usr/local/lib` etc.
 
 One other consideration to take into account is which distro you have on the target system, because obtaining a pre-built 
-cross toolchain for an older compiler can be a pain. Tools like Yocto and Docker can make this aspect more manageable (and are much more necessary
-for doing this sort of thing at scale), but for me it worked to specifically use Debian Stretch, since that was installed on my Beaglebone as well.
+cross toolchain for an older compiler can be a pain. Embedded build systems like Yocto and Buildroot and/or Docker containers can make this aspect more manageable (and are much more necessary
+for doing this sort of thing at scale), but for me it worked to specifically use Debian Stretch, since that was installed on my Beaglebone as well. In fact, for longer term projects, using an embedded build system is way easier to maintain than
+ad-hoc crosscompilation using something like Debian multiarch. See the next post on board bringup for more info.
 
 
 > As an aside, originally I was using  Debian Buster (10) and couldn't find a clean way to get multi-arch support for armhf with 

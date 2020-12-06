@@ -1,8 +1,8 @@
 ---
 layout: post
-title: DEVELOPING AUDIO PROGRAMS FOR EMBEDDED LINUX, PART 1.5
+title: EMBEDDED LINUX AUDIO BOARD BRINGUP
 date: 2020-9-13 04:01:00
-description: Board bringup. Expands on the first article by using a different board and a more robust build process.
+description: Discusses writing an embedded Linux image designed for audio development with Buildroot and Raspberry Pi.
 ---
 
 <figure>
