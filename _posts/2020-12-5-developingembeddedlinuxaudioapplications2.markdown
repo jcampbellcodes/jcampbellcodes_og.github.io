@@ -11,7 +11,7 @@ description: The second in a two part series about cross-compiling an ALSA progr
 </figure>
 
 
-In my [first embedded Linux post](/2020/06/30/developingembeddedlinuxaudioapplications.html), we covered how to write a dead-simple ALSA driver and cross compile it for an ARM embedded device.
+In my [first embedded Linux post](/2020/07/01/developingembeddedlinuxaudioapplications.html), we covered how to write a dead-simple ALSA driver and cross compile it for an ARM embedded device.
 Next, we need to figure out how to configure I2S audio to come out on pins from the Beaglebone,
 hook those pins up to our external DAC and audio amplifier, deploy our cross compiled ALSA program to our Beaglebone, and
 run the thing!
@@ -38,7 +38,7 @@ post can act as a jumping board for you to get more deep on this stuff. Let's st
 <br>
 Before anything, let's quickly make sure your Beaglebone Black is functional. For simplicity, this article assumes that 
 you are using the Beaglebone-supplied Linux image on your board, but the concepts still apply if you made your own image 
-using Buildroot as described in the [last article](/2020/09/12/developingembeddedlinuxaudioapplications15.html). A fair amount
+using Buildroot as described in the [last article](/2020/09/13/developingembeddedlinuxaudioapplications15.html). A fair amount
 of the discussion is Beaglebone/AM335x specific, but intended to be presented in a way that you could investigate a different
 embedded Linux board you might be working with such as a Raspberry Pi.
 
