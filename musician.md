@@ -32,7 +32,9 @@ with Brett Bullion in Minneapolis, MN.
 # <center> music </center>
 <br>
 
-<iframe style="border: 0; width: 400px; height: 472px; float: right; margin-left: 25%; margin-right: 25%; margin-bottom: 10%;" src="https://bandcamp.com/EmbeddedPlayer/album=3033148406/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless><a href="https://jackcampbell.bandcamp.com/album/lucky-break">Lucky Break by Jack Campbell</a></iframe>
+
+<iframe style="border: 0; width: 400px; height: 472px; float: right; margin-left: 25%; margin-right: 25%; margin-bottom: 10%;" src="https://bandcamp.com/EmbeddedPlayer/album=3033148406/size=large/bgcol=333333/linkcol=0f91ff/tracklist=true/transparent=true/" seamless><a href="https://jackcampbell.bandcamp.com/album/lucky-break">Lucky Break</a></iframe>
+
 
 <iframe style="border: 0; width: 400px; height: 472px; float: right; margin-left: 25%; margin-right: 25%; margin-bottom: 10%;" src="https://bandcamp.com/EmbeddedPlayer/album=75804434/size=large/bgcol=333333/linkcol=0f91ff/artwork=small/transparent=true/" seamless><a href="http://jackcampbell.bandcamp.com/album/jack-campbell">Jack Campbell</a></iframe>
 
