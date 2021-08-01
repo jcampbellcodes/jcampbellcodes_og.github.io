@@ -22,9 +22,8 @@ pop facade.
 
 Campbell's music has found a worldwide audience following the release of 
 Absentee (2013), with much of his fanbase spread throughout the UK, Germany,
-and the Netherlands. After returning to the studio with Minneapolis
-producer/engineer Brett Bullion, he plans to release a follow up record in
-early 2019.
+and the Netherlands. His latest release is the EP Lucky Break (2019), recorded
+with Brett Bullion in Minneapolis, MN.
 
 "Something tells me there's a bright future ahead for Jack Campbell."
 - Andrea Swensson, NPR
@@ -33,8 +32,9 @@ early 2019.
 # <center> music </center>
 <br>
 
-<iframe style="border: 0; width: 400px; height: 472px; float: right; margin-left: 25%; margin-right: 25%; margin-bottom: 10%;" src="https://bandcamp.com/EmbeddedPlayer/album=75804434/size=large/bgcol=333333/linkcol=0f91ff/artwork=small/transparent=true/" seamless><a href="http://jackcampbell.bandcamp.com/album/jack-campbell">Jack Campbell</a></iframe>
+<iframe style="border: 0; width: 350px; height: 470px;" src="https://bandcamp.com/EmbeddedPlayer/album=3033148406/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless><a href="https://jackcampbell.bandcamp.com/album/lucky-break">Lucky Break by Jack Campbell</a></iframe>
 
+<iframe style="border: 0; width: 400px; height: 472px; float: right; margin-left: 25%; margin-right: 25%; margin-bottom: 10%;" src="https://bandcamp.com/EmbeddedPlayer/album=75804434/size=large/bgcol=333333/linkcol=0f91ff/artwork=small/transparent=true/" seamless><a href="http://jackcampbell.bandcamp.com/album/jack-campbell">Jack Campbell</a></iframe>
 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/zlvF7JVtYmg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
