@@ -2,63 +2,84 @@
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 3
 date: 2022-01-01 04:01:00
-description: The third in a five part series about the components of a simple bare metal synth using the Daisy platform. This part is about the application code itself.
+description: A post about the UART driver in a Daisy synth.
 ---
 
-The next step to understanding this stuff is to see how the Daisy platform sets it all up!
+go back to the previous parts if you haven't read them
 
-We know generally that we need to find and configure a UART Rx pin to send our MIDI to. To understand the best way to do that on the Daisy (currently),
-I want to dig into the MIDI handling code and show how they’ve set up the pin multiplexing and the UART driver, which allows your code to read the MIDI data that it might expect (not raw bytes, but parsed into “note on” events, etc that we might expect)
+How do we connect MIDI to daisy? The uart!
 
-What are we looking for?
-Which UART the libDaisy MIDI driver can use
-Corresponding UART driver
-How/when a DMA request is initiated
-GPIO multiplexing
-Which pins we connect to!
-Where is the DMA receive interrupt
+At a high level, we want to find a “pin” (connector) on the Daisy which can accept a UART signal, so that our program can read the MIDI data. So we need to look at the available pins on the Daisy and try to find a UART one.
 
-Turns out, we don’t actually have to do this ourselves with Daisy.
-They handle the multiplexing; we just use their library and “turn MIDI on”
-But let’s look into what they are doing a little bit to see which pin they use and how they enable it
+This diagram is known as a “pinout”.
+It shows the Daisy, and lays out what each pin can be used for.
+We need to find the one that we can accept UART…
+Note: You’ll see the letters “rx” and “tx” a lot in embedded
+They stand for: Rx==Receive(input) Tx==Transmit (output)
 
-*now show some code*
-Let’s start from the code for the actual synth. Notice there aren’t any direct references to a UART driver in this application; just an Init call to the MIDI handler, set to UART mode. (as opposed to USB midi, etc).
-Let’s look in there…
-There is an init call to the UART handler...
-Don’t worry about interrupts or the uart driver itself yet, we will get there…
-Just looking for the multiplexing code
-Check out the UART config; this UART handle currently is only set up to use USART1, which should work for what we want
-See the GPIO initialization here, which sets the corresponding pins to be their USART1 configuration
-TODO: Find mapping between those GPIO defines and the Daisy pinout
+So we want to find a UART Rx pin, because we are transmitting MIDI and want the board to Receive it on a UART pin
+(On this pinout you’ll see USART and UART; for this scenario, the difference doesn’t matter)
+The USART is a special peripheral that can deal with regular UART signals with start and stop bits or be put into “sync” mode, where a internal clock is used and no start/stop bits are needed in the signal
 
+But many of the pins, including the USART pin, have more than function listed!
+What does that mean? How do we tell Daisy that we want to send a UART signal to a particular pin without it thinking that we are sending an I2C signal?
 
+To understand, let’s talk about multiplexing.
+Those pins that have multiple functions next to them are called “General Purpose Input Output” pins, or GPIO.
+It means that the pin can be assigned different functions (and possibly internally connected to different peripherals) depending on configuration in the software.
 
------
+It would waste precious space to organize this board such that each of these possible functions have their own pins, which is why they are GPIOs in the first place.
 
-libDaisy does this for us, let’s see how!
-Let’s look at libDaisy to see what it expects
-Go into repo, checkout midi.h
-It references UART1! And calls init on it… hmmm..
-Dig a little deeper, what is UartHandler…
-Ok cool, its set currently to always use USART1 and we can see this is where the board would expect to see midi
-Important to note: it sets the baud rate as well. MIDI is a non-standard baud rate.
-Easy to set here; a pro of bare metal!
-Pain in the butt in linux
-So now we know how midi is getting in!
+So we need to find the GPIO we want, and “multiplex it” (sometimes calling “muxing”) in the code so that the pin we want is a UART Rx pin that we can send MIDI data to. 
 
 
-Now we have covered how MIDI is handled in the system -- next let’s go into how audio comes out of the thing
-
-Now that we have a way to access MIDI data, our program looks a lot like a regular ol’ C++ audio program. There is an audio callback firing off concurrently with a “main thread” (will talk about that more later). The main thread is listening to MIDI messages, and writing to a shared structure in response to note on/note offs. The audio callback asks this structure for an audio sample, which the structure gives back based on the current state of its oscillators and envelopes.
-There are concurrency concerns here I might ignore…
-The audio sample is still just a series of floats. Next we are going to focus on...
+----
 
 
-Read by a program running on the CPU
-Now you can access midi data; time to write a program
-We set up the MIDI driver using libDaisy; this reads from the UART and interprets the UART specifically as MIDI messages that we can read
-parses that raw UART data against the MIDI spec
-Raw UART bytes parsed with MidiHandler::Parse(uint8_t byte)
-Now we can use some little functions to write some audio to an output buffer
+These pins are called General Purpose Input/Output (GPIO) pins and have multiple meanings, since it would be infeasible and inefficient to fit all the pins you need for all these functions on one board
+Daisy pinout says “peripheral GPIO”; the pin we are looking at could connect to either the USART1 peripheral, or the I2C4 peripheral
+For that reason, we have a concept called “multiplexing” where we specify which pins should be assigned to which function.
+So we have to set up a UART MIDI Rx pin; turns out libDaisy does this for us, let’s see how!
+
+General Purpose Input Output
+Can be assigned various functions
+Would waste space otherwise
+Setting the pin function == “multiplexing”
+Or muxing
+Find a GPIO that can be UART Rx
+Set the mode in the code
+
+
+Once we enable the correct pin to be in “USART1” configuration, where does the data go?
+
+Well an implication of muxing the pin to be in USART1 configuration means this pin now sends data to the USART1 STM32H7 peripheral.
+
+The final conceptual part about this communication I want to talk about before digging into code is how the USART1 peripheral receives the data and uses the DMA (direct memory access) interface to allow the program to receive the MIDI data via the UART driver
+
+DMA request
+Set Destination (give me data) vs source (send this data to another peripheral)
+How much data to receive
+When we receive that data, we get an interrupt
+That’s when we deal with the data (do some midi stuff)
+When do we initiate the DMA request?
+Hardware vs software trigger
+see:
+How to use this driver
+In stm32h7xx_hal_uart.c
+
+What an interrupt is in general
+How does an audio interrupt work
+
+Interrupts
+Similar to polling vs callbacks
+You want some data
+You can repeatedly ask for it from a peripheral (polling)
+Or you can give the peripheral a function and say “call this when the data is ready”
+The audio callback in this case is what is known as an “interrupt”
+We actually have already dealt with an interrupt in this talk already:
+The MIDI’s UART driver operates using DMA interrupts
+High priority callback
+IRQ calls ISR (service routine); the AudioCallback is the ISR
+There are certain rules to keep in mind when writing ISR’s, mostly the same as the “usual suspects” for realtime safe code. No allocations, etc.
+
 

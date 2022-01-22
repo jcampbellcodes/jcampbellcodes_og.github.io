@@ -5,229 +5,151 @@ date: 2022-01-01 04:01:00
 description: The first in a five part series about the components of a simple bare metal synth using the Daisy platform. This part is about the MIDI input circuitry.
 ---
 
-Exposition of embedded system concepts
-Breadth over depth
-Throw jargon around
-Make further explorations more approachable
-Anatomy of a digital synthesizer 
-Daisy platform
-Bare metal C
+There's something magic about building music devices. Hacking away at a digital synthesizer or
+guitar pedal built with your own two hands and pumping out some weird sounds can be a 
+rewarding project. But where do you start?
+
+<figure>
+  <img class="col center" src="/img/bare_metal/overhead_synth.jpg">
+  <figcaption>Daisy Synth with Headphone Amp and MIDI DIN</figcaption>
+</figure>
+
+From the outside, embedded software development can seem intimidating. Even for professional
+software developers in other disciplines, there is a ton of new foreign jargon, additional
+concerns to take into account, and a sometimes hostile development environment compared
+to a cozy and powerful native system.
+
+The good news is that, while embedded development is indeed a deep rabbit hole, the learning
+curve is more manageable than it appears. This series of articles is meant to expose-via-example 
+some of the jargon and direction to latch on to when building embedded music devices. We will be
+using a bare metal synth written in C++ using the [Electrosmith Daisy](https://github.com/electro-smith/DaisyExamples) platform to go over some 
+of the key concepts and subsystems you might see in a music project. 
+
+### Prerequisites / Additional Reading
+<br>
+
+My hope is that these articles can serve as a starting point for some,
+but be specific enough to be practical. That said, these articles may assume some existing programming background, and some experience with analog electronics could be helpful as well. A book I highly recommend for getting a start with electronics in general (analog and some digital) is Charles Platt's 
+[Make: Electronics](https://www.oreilly.com/library/view/make-electronics/9781449377267/).
+
+That book goes over the equipment and components that you'll want in your lab, basic principles of 
+electricity and circuit patterns, cool labs, soldering, and it happens to have a few neat audio projects in it as well.
+
+For instance, you'll learn how to go from a circuit diagram like this one from this great [LM386 amplifier tutorial](https://www.instructables.com/Tales-From-the-Chip-LM386-Audio-Amplifier/):
+<figure>
+  <img class="col center" src="/img/bare_metal/instructable_lm386.png">
+  <figcaption><a href="https://www.instructables.com/Tales-From-the-Chip-LM386-Audio-Amplifier/"> LM386 amplifier tutorial</a></figcaption>
+</figure>
+
+To the corresponding prototype implementation of this circuit, using a tool known as a [solderless breadboard](https://en.wikipedia.org/wiki/Breadboard). These boards allow you to try out circuit design prototypes by plugging throughhole components
+into holes before committing to a design by soldering it together.
+
+<figure>
+  <img class="col center" src="/img/bare_metal/headphone_amp.jpg">
+  <figcaption>Built headphone amplifier based on schematic</figcaption>
+</figure>
 
 
-The goal of this talk is to tie together some of the concepts and terms you will see floating around when you start to get into embedded audio. Give you something to latch on to if you are interested in making things like guitar pedals, digital synthesizers, instruments, etc. 
+### What is "bare metal"?
+<br>
 
-Not meant to teach you everything you need to know
-
-Introduce you to some of the jargon, with the hope that it will be less intimidating the next time around if you start to tinker with this stuff
-
-Intro (this part!)
-Types of embedded software development
-Anatomy of a bare metal synth
-MIDI circuitry
-UART driver
-Software MIDI parsing
-Software writing audio data
-Decoding I2S audio
-Amplifying resulting analog audio
-
-Before getting into details, this is where we are headed.
-First the intro (this part). We’re doing it!
-Then I’m going to talk about embedded development a little bit just to put the main section into context. Different types of embedded development and how to learn more about electronics, analog circuitry, prototyping, etc.
-Then I will show you a simple synth I made with Daisy and go over all the main sections one by one.
-First show you how the MIDI input gets into the synth
-Go over how Daisy consumes MIDI using a communication protocol known as UART
-Talk about how the UART is parsed as MIDI data
-Go over how the audio codec eats up the digital audio that your program writes in response to the MIDI data
-Talk about how the codec converts I2S digital audio into analog audio (line level)
-Finally, how the line level audio can be amplified with an analog circuit to be loud enough for unpowered speakers or headphones
-Then will quickly review and show the finished prototype!
-So let’s start!
-
-------
-
-What are we going to talk about?
-How to hook up a bare metal synth on a breadboard!
-Hopefully simple enough that it can be a starting point
-Specific enough that it is practical
-Getting midi into a device, playing with it, and getting audio out
-Basic embedded programming concepts 
-“Bare metal programming”
-Through the lens of a bare-metal synth running on the Daisy platform
-Communication protocols
-UART, I2S, MIDI
-Digital to analog audio conversion
-GPIOs and multiplexing
-Interrupts
-
-Knowledge of analog electronics useful
-Not 100% required for this talk
-If that’s not you yet, check out:
-Make: Electronics by Charles Platt
-Practical projects/labs
-Easy to read
-Learn soldering, tools, prototyping
-Has audio projects!
-Sparkfun also has great resources
-For analog + digital electronics learning
+One thing to be aware of when diving into embedded development is that there are a number of
+subcategories under that umbrella that may bring unnecessary confusion during a Google search. 
+The following articles will be discussing "bare metal" C++ development, but I'd like to briefly discuss a few 
+of these other subcategories to give some context. They all share common elements, but differ enough 
+that it is good to know (for instance) whether advice you find for one type will apply to your current 
+efforts.
 
 
-So to start: if you aren’t into analog circuits yet, this section will offer some breadcrumbs.
+# Bare metal development
+<br>
 
-Not totally required for this talk, but some knowledge of analog electronics will be helpful
+"Bare metal" is sometimes a contested term, but I use it simply to mean development
+for a microcontroller with no operating system. When developing for a bare metal system, you usually 
+have a library specific to the board (or family of boards) that you are developing for, which
+defines hardware registers that you read from or write to directly, rather than passing through an 
+interface provided by an OS. You often are writing
+drivers yourself (or are using vendor provided ones, that you could modify if desired) and don't 
+need to go through an OS to perform the lowest level operations. Elecia White's [Making Embedded Systems](https://www.oreilly.com/library/view/making-embedded-systems/9781449308889/) is a great introduction to bare metal programming, with concepts that will also aid when getting into other 
+types of embedded development.
 
-If you don’t know any analog electronics, but are interested, I highly recommend working through Make: Electronics. It’s full of teaching concepts through labs, approachable but practical, learn about common patterns like RC circuits, timers, voltage dividers, how to solder. Also has audio projects!
+While there are less guardrails in bare metal development, it also is a less distracting way to learn about embedded programming compared to the following approach.
 
-And then especially for digital concepts, Sparkfun has lot of good resources. Meant to sell their products, but I like their products :)
+# Embedded Linux development
+<br>
 
---------
-
-
-
-Aside: Breadboarding and Analog Electronics
-Check out Make: electronics
-You’ll get set up with a workstation, components, tools, etc.
-You’ll see schematics, breadboards, and analog circuits in this talk
-Sort of awkwardly out of scope
-Recommend Make: Electronics if you do not have analog experience yet; teaches a lot of important concepts 
-through easy projects and will get you comfortable with tools, schematics, and tinkering.
-
-For example, you might see some schematics. These are diagrams that show electrical connections and component types, but not necessarily the exact layout of the circuit.
-
-Here’s one of those; they look like this. This is a headphone amplifier from an Instructable article (linked). I used this LM386 schematic in this synth for the headphone amp. This circuit is also covered in Make: Electronics!
-
-Then here is the corresponding prototype implementation of this circuit, using a tool known as a “solderless breadboard”. Can just plug in all the components and make sure they work before you have to solder anything.
-
-Before getting into the synth, I want to go over the different types of embedded programming and where our synth fits in. We mentioned this before, but the “type” of programming used in this synth is called “bare metal” programming. This just means that we are writing a program that talks directly to hardware peripherals. Those peripherals are exposed to your C or C++ code via pointers; when you read from those pointers, you are actually reading data that was put there by a peripheral. When you write to the registered pointed to, you are actually sending data over hardware to those peripherals.
-The big delimiter is the absence of a true operating system. These systems can be a lot more straightforward to reason about (still not “easy” necessarily).
-Elecia White has a book called Making Embedded Systems that is a great first read to get into bare metal development in C.
-
-On the other end of the embedded spectrum, we have embedded Linux. Very powerful way to develop, and makes a lot of sense, especially if you are developing software that also needs to run on native platforms. (easier to port). The OS overhead is non-trivial and there is a lot of history to learn about, both with Linux itself and the complicated build systems such as Yocto and Buildroot to create an embedded Linux image on your board. You also seldom run into interfacing with hardware “directly”; your application runs in user space generally, whereas kernel space programs are dealing with hardware.
-
-There are other “in-betweens”. One is RTOS programming (you may see “FreeRTOS”). This is entwined with “real time programming” which requires specialized concerns, but in short, an RTOS based program is generally mostly baremetal, but it has a scheduler that allows for deterministic execution of your code. Then there is FPGA programming, which is also bare metal programming, but different in that you are programming logic gates directly using a “hardware definition language” such as Verilog, rather than C.
-
-Types of embedded programming
-To put what we are talking about into context, these are the main “camps” of embedded programming -- we are only talking about one of them
-Linux
-Powerful: you have a small computer
-More easily port existing applications that build with gcc
-Overhead of an OS
-Build systems are extremely complicated
-Kernel space vs user space
-If you squint and set kernel build variables in a specific way, you can use Linux as an RTOS. This is a point of contention in the industry.
-“Bare metal”
-Talking directly to memory mapped addresses of physical devices
-In reality, you’ll use a HAL and vendor-supplied libraries much of the time to make driver development much easier than starting from the ground up
-A loose term; I’m personally only familiar with “embedded C or C++ programming” but there are similar fields such as FPGA programming done in Verilog, which is a sort of “hardware programming”, programming at the logic gate level
-RTOS (ie FreeRTOS)
-Still sort
-“Mini OS” with a real-time scheduler, but you still gotta write the drivers
-
-ELECTROSMITH DAISY
-
-Embedded platform for music
-On-board AKM audio codec
-ARM Cortex M7 processor
-Low cost
-Software libraries make great examples
-Bare-metal
-Powerful DSP library DaisySP
-Hardware library libDaisy
-
-This synth was made using the “daisy platform”, which includes both hardware and software.
-Useful for this talk because in most cases, platforms like Teensy are more general purpose, and you need to find libraries meant for audio and sift through a lot of stuff that doesn’t apply to your usage.
-This board has a built-in audio codec, so you don’t need to buy some expansion or connect an external one. You can if you want, and I do in this talk just because it is a little easier to see the peripherals that way, but in practice that is edge case-y.
-Still forces us to look at how usual bare metal techniques work, like pin multiplexing and gpios, communication protocols, etc.
-
-This is the high level diagram of the synth
-Shows how data flows through it.
-We will use this diagram to talk through all the parts
-
-This part o the block diagram deals with routing MIDI from an external source (such as a MIDI controller) into the Daisy
-We start with one of these 5 pin DIN connectors you’ll see on mostly older synths
-Or more concretely...
-
-You can see the MIDI output coming from a Microkorg here into this breadboard jack
-
-This is the whole synth, and:
-Here is the part that deals with MIDI
-It’s not just a single wire though with the MIDI data…
-What is all that stuff?
-
-MIDI Circuitry
-
-Defined by MIDI spec
-Optoisolator
-Avoid ground loop
-RX Pin out
-Connect to Daisy
-Transport mechanism
-
-Let’s briefly talk about that circuit, because it’s kind of cool.
-This schematic is from notesandvolts, who has a tutorial about it. Go read it!
-This circuit is defined by the MIDI spec. It’s more complicated than just connecting the MIDI output of a device into the MIDI input of another device.
-The whole thing revolves around this component, the 6N138, which is an optoisolator. Its purpose in life is to 
-Take an electrical signal (MIDI)
-Flash an LED
-Put it next to a component that converts light into electrical signals
-Outputs the corresponding data
-We connect that data to a pin on the daisy
-Why do this?
-Since the MIDI output device is not directly electrically connected to our circuit, it is just connected by this light system, we won’t get any ground loops
-Ground loops are bad, they can cause buzzing/humming by connecting one device’s ground to another
-
-So that’s the transport mechanism, or how we get MIDI from point A to point B… but that begs the question...
+The other extreme for programming microcontrollers, opposite bare metal programming, is embedded Linux development. This entails
+building a custom Linux distribution that works with your target hardware that includes your
+application software. When starting from scratch, embedded Linux can be much more complicated than bare-metal,
+due to the complexity of rolling your own Linux distro (either manually, or more likely via a 
+build system such as Yocto or Buildroot). There is also the potentially significant extra runtime overhead of running an OS on your target and development overhead of getting around the OS to 
+perform low level operations. However, embedded Linux can be a powerful way to develop and is
+the go-to approach for writing or porting cross platform software that can more easily be deployed to 
+native platforms like macOS or Windows (or even native Linux). Sometimes the ability to leverage
+an OS outweighs the runtime cost, especially if your application requires you to reimplement
+many of the features that Linux would have offered anyway.
 
 
-MIDI circuit
-Before worrying about how to get the data into the daisy, let’s determine how to receive from a midi device via a circuit
-The MIDI circuit itself is fairly simple 
-but is also fun because it requires an optoisolator
-Show diagram, note which is the “midi out” wire
-The circuit is specified by the official midi spec
-https://www.notesandvolts.com/2015/02/midi-and-arduino-build-midi-input.html
+# RTOS-based Development
+<br>
 
-what is MIDI?
+Between the extremes of "bare metal" and "OS-based" embedded programming is programming using
+an RTOS ("ar-toss"), a Real-Time Operating System, the most common of which you'll likely come
+across being FreeRTOS. These operating systems exist with a range of features, but their core featue 
+is a real-time scheduler. A bare metal application can integrate the features of an RTOS
+but still, for the most part, "feel" like a baremetal application, which is why I place it 
+somewhere in the middle. For instance, you may write all your I2C or SPI drivers to communicate 
+with peripherals, and then leverage FreeRTOS scheduler for the realtime functionality of your 
+application.
 
-It’s a “serial communication protocol”!
+# FPGA Programming
+<br>
 
-But that begs the question...
+The last type I'd like to mention is FPGA (field-programmable gate array) programming. This is
+a different beast than the types of development listed above, which focus on programming a 
+microcontroller with a higher level programming language like C++ or Python. When designing
+an FPGA, you use an HDL (hardware description language) to directly configure the digital logic
+gates on the device. FPGAs can be used to great effect in performance critical parts of a device.
+If interested, check out this [Sparkfun tutorial](https://learn.sparkfun.com/tutorials/programming-an-fpga/all).
 
-Very important in embedded
-Peripheral walkie talkies
-Binary electrical signals
-Both sides agree what it means
-UART, SPI, I2S, I2C
-Great practice
-Write your own drivers
+### Anatomy of a Bare Metal Synth
+<br>
 
-Serial communications protocols are a crucial concept in learning embedded development
-Embedded systems are really made up of a collection of peripherals who are talking to one another
-The transport mechanism they speak is a binary electrical signal (a square wave)
-Both sides need to know what that signal actually means
-These are various protocols, UART, SPI, I2S, I2C
+So with the above context in mind, the next few posts are going to look at a bare metal
+synth using the [Electrosmith Daisy](https://github.com/electro-smith/DaisyExamples) 
+platform, on the [STM32-based Daisy Seed](https://www.electro-smith.com/daisy/daisy). This platform 
+offers, in addition to the STM32 vendor-provided libraries, a 
+suite of music-geared drivers and DSP modules that make developing embedded music
+devices a lot more straightforward. I like it as a learning tool especially, since their
+libraries are transparent and make it simpler to tinker with what is happening under the 
+hood.
 
-One great way to get started in embedded is to try writing your own drivers
-Get a breakout board like an I2C temperature sensor
-Write an I2C driver to read the temperature
-That sort of stuff
+Other similar platforms you may find for starting bare metal development are the Arduino
+and Teensy platforms. These are both more general purpose and will involve finding libraries
+and peripherals in order to create audio devices, whereas the Daisy is music-geared out of the
+box, with features like an on-board audio codec and USB MIDI support. However, Daisy still allows
+us to look at how usual bare metal techniques work, like pin multiplexing and gpios, communication protocols, etc, so it strikes a nice balance for these articles.
 
-Here is what a communication protocol looks like (this is from the Phillips spec for the I2C protocol). The top line is a square wave that has actual data (temperature, motor control, new sample rate setting for an audio interface). The bottom line is a clock so the receiving side knows where each byte starts and stops.
+This is a signal flow diagram of the components we will go over. 
 
-Simpler mechanisms can be like UART, which has only a single line of data
+<figure>
+  <img class="col center" src="/img/bare_metal/flow_diagram_highlights/0_Diagram.png">
+  <figcaption>Flow diagram of Daisy Synth</figcaption>
+</figure>
 
-No clock involved, just an agreement on each side of how many “bits per second” the data will be sent at
-Called the “baud rate”
+Specifically:
+- MIDI data comes in from some generator or MIDI controller
+- MIDI data goes through a MIDI isolator circuit
+- Isolated MIDI is sent to the UART Rx pin on the Daisy
+- The UART driver on the Daisy makes the MIDI data available to your application
+- Your application interpets this MIDI and generates digital audio data in response
+- That digital audio is sent to the STM32's SAI (serial audio interface) as an I2S signal
+- The SAI sends that I2S signal to an audio codec (D/A converter) to create analog audio
+- That analog audio is optionally amplified before being sent to a speaker or line out
 
-So back to MIDI…
-MIDI itself is a serial communication protocol, but for all intents and purposes, it is a specialization of UART
-There are many ways to transmit midi
-But the spec only identifies that MIDI is a single signal
+# Up next: MIDI
 
-Can come in many forms
-Bluetooth
-TRS
-MIDI 5-pin DIN
-Just a UART signal
-“Universal Asynchronous Receiver-Transmitter”
-Baud rate of 31250
-See Sparkfun MIDI tutorial
+This article served as an overview and introduction to where we are headed next. Check
+out [the next one](/2021/12/31/anatomyofabaremetalsynth_part2.html)
+for info on the first part of the signal flow for our synth: the MIDI input.
+
