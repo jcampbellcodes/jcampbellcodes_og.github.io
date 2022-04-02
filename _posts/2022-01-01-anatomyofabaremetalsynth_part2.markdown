@@ -130,7 +130,7 @@ Here is a schematic of that circuit from [Notes and Volts](https://www.notesandv
   <figcaption>MIDI optoisolator circuit from a <a href="https://www.notesandvolts.com/2015/02/midi-and-arduino-build-midi-input.html">Notes And Volts Arduino MIDI tutorial</a></figcaption>
 </figure>
 
-The most interesting part of this circuit is the little arrows in the middle. This is the key component of the "optoisolator" [IC](https://en.wikipedia.org/wiki/Integrated_circuit), in this case the [6N138](http://i2c2p.twibright.com/datasheet/6n139.pdf). (An 6N137 can do the trick as well, and is what I'm using in the breadboard pictures) 
+The most interesting part of this circuit is the little arrows in the middle. This is the key component of the "optoisolator" [IC](https://en.wikipedia.org/wiki/Integrated_circuit), in this case the [6N138](http://i2c2p.twibright.com/datasheet/6n139.pdf). (A 6N137 can do the trick as well, and is what I'm using in the breadboard pictures) 
 
 This component processes the signal from the Korg like so:
 - Takes an electrical output signal from another device (MIDI)
