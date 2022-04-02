@@ -5,65 +5,115 @@ date: 2022-01-01 04:01:00
 description: A post about the UART driver in a Daisy synth.
 ---
 
-go back to the previous parts if you haven't read them
+This is the third part in a series about a bare metal synth. For an introduction to this series, see [the previous post](/2021/12/31/anatomyofabaremetalsynth_part2.html).
 
 # Receiving UART Data on the Daisy
 <br>
 
-How do we connect MIDI to daisy? The uart!
+In the last post, we talked about what MIDI is (a UART signal) and the circuit involved with
+preparing the MIDI signal to be sent to the Daisy. But how do we take the output from that
+circuit and use it in our code?
 
-At a high level, we want to find a “pin” (connector) on the Daisy which can accept a UART signal, so that our program can read the MIDI data. So we need to look at the available pins on the Daisy and try to find a UART one.
+The first step is to find where to connect the output to the Daisy. The connections to the
+outside world on a microcontroller are called "pins", and we need to find a pin that will
+accept our UART signal and feed it to the Daisy's UART driver.
 
 <figure>
   <img class="col center" src="/img/bare_metal/DaisyPinoutRev4@4x.png">
-  <figcaption>MIDI input to circuit</figcaption>
+  <figcaption>Daisy pinout</figcaption>
 </figure>
 
-This diagram is known as a “pinout”.
-It shows the Daisy, and lays out what each pin can be used for.
-We need to find the one that we can accept UART…
-Note: You’ll see the letters “rx” and “tx” a lot in embedded
-They stand for: Rx==Receive(input) Tx==Transmit (output)
+This diagram above is known as a "pinout". It diagrams all of the available pins on the
+Daisy and what they can be used for. 
 
-So we want to find a UART Rx pin, because we are transmitting MIDI and want the board to Receive it on a UART pin
-(On this pinout you’ll see USART and UART; for this scenario, the difference doesn’t matter)
-The USART is a special peripheral that can deal with regular UART signals with start and stop bits or be put into “sync” mode, where a internal clock is used and no start/stop bits are needed in the signal
+---
+**NOTE**
 
-But many of the pins, including the USART pin, have more than function listed!
-What does that mean? How do we tell Daisy that we want to send a UART signal to a particular pin without it thinking that we are sending an I2C signal?
+You'll see the letters "Rx" and "Tx" a lot in embedded documentation. These stand for
+"receive" (input) and "transmit" (output), respectively.
+---
+
+Using this diagram, we want to find the UART Rx pin, because we are transmitting a MIDI
+signal to be "received" by the Daisy. In this particular pinout, you'll see the pin we want (pin 15)
+marked as "USART" (Universal Synchronous/Asynchronous Receiver/Transmitter). In this
+case, the difference does not matter, because USARTs can handle regular UART signals as well,
+like the one we are sending.
+
+But you'll notice -- many of the pins, including the USART pin, have more than one function
+listed. What does that mean? How do we tell the Daisy that we want to send a UART signal to pin 15,
+rather than an I2C signal which is also listed for pin 15?
 
 # Multiplexing
 <br>
 
-To understand, let’s talk about multiplexing.
-Those pins that have multiple functions next to them are called “General Purpose Input Output” pins, or GPIO.
-It means that the pin can be assigned different functions (and possibly internally connected to different peripherals) depending on configuration in the software.
-
-It would waste precious space to organize this board such that each of these possible functions have their own pins, which is why they are GPIOs in the first place.
-
-So we need to find the GPIO we want, and “multiplex it” (sometimes calling “muxing”) in the code so that the pin we want is a UART Rx pin that we can send MIDI data to. 
+The term for assigning multiple potential uses to a signal pin is "multiplexing" (or sometimes
+"muxing"). Multiplexing helps to save space. While it might be more straightforward to have a single
+function exposed on every pin without having to mess around with configuration in the code, 
+not every application is going to need every function from every pin. So multiplexing keeps
+the space footprint of the board down.
 
 
-# General Purpose Input/Output Pins
+### General Purpose Input/Output Pins
 <br>
 
-These pins are called General Purpose Input/Output (GPIO) pins and have multiple meanings, since it would be infeasible and inefficient to fit all the pins you need for all these functions on one board
-Daisy pinout says “peripheral GPIO”; the pin we are looking at could connect to either the USART1 peripheral, or the I2C4 peripheral
-For that reason, we have a concept called “multiplexing” where we specify which pins should be assigned to which function.
-So we have to set up a UART MIDI Rx pin; turns out libDaisy does this for us, let’s see how!
+The multi-purpose pins themselves are called "General Purpose Input Output" pins, or
+GPIOs. These pins can be assigned to any of the labeled functions and internal peripherals 
+depending on configuration in the software. So we need to find a way to set up the pin 
+configuration in our code such that pin 15 is in "USART Rx" mode, which makes it ready to
+receive our MIDI signal. Luckily, this is handled in `libDaisy` for us.
 
-General Purpose Input Output
-Can be assigned various functions
-Would waste space otherwise
-Setting the pin function == “multiplexing”
-Or muxing
-Find a GPIO that can be UART Rx
-Set the mode in the code
+### Daisy MIDI UART Config
+<br>
 
+`libDaisy` implements two wrappers we can look at for the particular case of UART MIDI handling.
+The first is the `MidiHandler` class in midi.h/cpp. This class is how our application
+code can interface with the MIDI hardware without worrying about hardware details. This class
+also contains the second wrapper, `UartHandler` (uart.h/cpp), which abstracts away the details of 
+dealing with the STM32 hardware abstraction library (HAL) that sets the registers that interact
+directly with the UART peripheral. 
+Diving into these two files can teach you a lot about how a UART driver is implemented.
 
-Once we enable the correct pin to be in “USART1” configuration, where does the data go?
+This is how the `MidiHandler` configures the UART class, notably setting the baud rate to the
+one specified by the MIDI spec (31250), initializing the USART_1 peripheral, and telling the
+USART_1 peripheral to use `GPIO port B pin 7` as the "receive" pin and `GPIO port B pin 6`
+as the "transmit" pin.
 
-Well an implication of muxing the pin to be in USART1 configuration means this pin now sends data to the USART1 STM32H7 peripheral.
+{% highlight c++ %}
+UartHandler::Config config;
+config.baudrate      = 31250;
+config.periph        = UartHandler::Config::Peripheral::USART_1;
+config.stopbits      = UartHandler::Config::StopBits::BITS_1;
+config.parity        = UartHandler::Config::Parity::NONE;
+config.mode          = UartHandler::Config::Mode::TX_RX;
+config.wordlength    = UartHandler::Config::WordLength::BITS_8;
+config.pin_config.rx = {DSY_GPIOB, 7};
+config.pin_config.tx = {DSY_GPIOB, 6};
+uart_.Init(config);
+{% endhighlight %}
+
+But wait, how did we choose those pins? On the pinout earlier, weren't the USART1 pins 14
+and 15? Well, they were indeed, and this is one of the areas where you will be forced
+to dive into some datasheets to figure out what's up. The pins exposed by the Daisy
+translate to pins exposed by the STM32 microcontroller, and the mapping is not 1-1.
+
+To find the mapping, you will need to look at the Daisy's datasheet, which lives [here](https://github.com/electro-smith/Hardware/blob/master/doc/daisy_seed/Daisy_Seed_datasheet_v1.0.4.pdf).
+In there, you'll find a table called "pin functions". The leftmost column
+shows the numbers on the pinout, so if we go to 14 and 15, we will see 
+that these pins map to PB6 and PB7. 
+
+<figure>
+  <img class="col center" src="/img/bare_metal/pin_functions_gpiob.png">
+  <figcaption>MIDI input to circuit</figcaption>
+</figure>
+
+---
+**NOTE**
+GPIO pins are grouped into ports, and `Px` is a common short hand for "port X", but you'll also see it as "GPIOx", as in this case, where PB6 is shorthand for "GPIO port B, pin 6".
+
+---
+
+So now the pins are initialized to be in "receive MIDI" mode. Now that these pins can receive data, how do we access that data from our code?
+
 
 # Direct Memory Access
 <br>

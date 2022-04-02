@@ -1,8 +1,8 @@
 ---
 layout: post
-title: ANATOMY OF A BARE-METAL SYNTH, PART 5
+title: ANATOMY OF A BARE-METAL SYNTH, PART 6
 date: 2022-1-1 04:01:00
-description: The final part in a five part series about the components of a simple bare metal synth using the Daisy platform. This part is about the audio amplification.
+description: The final part in the Daisy synth series, covering the (optional) audio amplification.
 ---
 
 So now we have line level audio out!

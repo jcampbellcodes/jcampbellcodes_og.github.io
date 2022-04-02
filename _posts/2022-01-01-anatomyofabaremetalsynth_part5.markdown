@@ -1,8 +1,8 @@
 ---
 layout: post
-title: ANATOMY OF A BARE-METAL SYNTH, PART 4
+title: ANATOMY OF A BARE-METAL SYNTH, PART 5
 date: 2022-01-01 04:01:00
-description: The fourth in a five part series about the components of a simple bare metal synth using the Daisy platform. This part is about the audio codec.
+description: A post covering the audio codec on the Daisy synth.
 ---
 
 How are all these floats we are supplying the audio callback being turned into sound?

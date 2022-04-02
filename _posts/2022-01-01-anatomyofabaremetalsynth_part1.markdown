@@ -2,7 +2,7 @@
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 1
 date: 2022-01-01 04:01:00
-description: The first in a five part series about the components of a simple bare metal synth using the Daisy platform. This part is about the MIDI input circuitry.
+description: The first in a six part series about the components of a simple bare metal synth using the Daisy platform.
 ---
 
 There's something magic about building music devices. Hacking away at a digital synthesizer or
