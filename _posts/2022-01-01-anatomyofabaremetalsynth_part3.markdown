@@ -14,6 +14,12 @@ In the last post, we talked about what MIDI is (a UART signal) and the circuit i
 preparing the MIDI signal to be sent to the Daisy. But how do we take the output from that
 circuit and use it in our code?
 
+<figure>
+  <img class="col center" src="/img/bare_metal/flow_diagram_highlights/2_MIDI_uart_pin.png">
+  <figcaption>UART pin section of Daisy Synth</figcaption>
+</figure>
+
+
 The first step is to find where to connect the output to the Daisy. The connections to the
 outside world on a microcontroller are called "pins", and we need to find a pin that will
 accept our UART signal and feed it to the Daisy's UART driver.
@@ -69,6 +75,15 @@ receive our MIDI signal. Luckily, this is handled in `libDaisy` for us.
 
 ### Daisy MIDI UART Config
 <br>
+
+Once we are set up to send UART to the UART pin on the Daisy, the UART/MIDI data goes through
+a driver so that it can reach our application.
+
+<figure>
+  <img class="col center" src="/img/bare_metal/flow_diagram_highlights/3_UART_driver.png">
+  <figcaption>UART Driver on Daisy Synth</figcaption>
+</figure>
+
 
 `libDaisy` implements two wrappers we can look at for the particular case of UART MIDI handling.
 The first is the `MidiHandler` class in midi.h/cpp. This class is how our application
