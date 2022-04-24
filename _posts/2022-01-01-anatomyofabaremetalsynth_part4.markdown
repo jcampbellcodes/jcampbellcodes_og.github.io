@@ -258,7 +258,7 @@ sig = osc_.Process();
 
 `sig` is the next raw sample in the oscillator's waveform that we are outputting for the current pitch (MIDI note). The oscillator itself
 continually generates audio samples; it doesn't know that we are using it to create notes using the envelope. (In other words, the envelope and
-tone generation are decoupled.)
+tone generation are decoupled; the oscillator is always running at full volume and we determine the current actual volume later by multiplying by a handful of coefficients.)
 
 
 Then we run the oscillator sample through our filter:
