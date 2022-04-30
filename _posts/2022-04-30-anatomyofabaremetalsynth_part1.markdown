@@ -1,7 +1,7 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 1
-date: 2022-01-01 04:01:00
+date: 2022-04-30 04:01:00
 description: The first in a six part series about the components of a simple bare metal synth using the Daisy platform.
 ---
 
@@ -150,6 +150,6 @@ Specifically:
 # Up next: MIDI
 
 This article served as an overview and introduction to where we are headed next. Check
-out [the next one](/2021/12/31/anatomyofabaremetalsynth_part2.html)
+out the next one
 for info on the first part of the signal flow for our synth: the MIDI input.
 

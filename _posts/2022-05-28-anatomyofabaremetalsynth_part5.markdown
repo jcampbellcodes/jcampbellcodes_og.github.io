@@ -1,11 +1,11 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 5
-date: 2022-01-01 04:01:00
+date: 2022-05-28 04:01:00
 description: A post covering the audio codec on the Daisy synth.
 ---
 
-This is the fifth part in a series about a bare metal synth. See [the previous post](/2021/12/31/anatomyofabaremetalsynth_part4.html) and more for info needed here.
+This is the fifth part in a series about a bare metal synth. See [the previous post](/2022/05/21/anatomyofabaremetalsynth_part4.html) and more for info needed here.
 
 We will be covering this portion of the flow diagram:
 

@@ -1,11 +1,11 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 6
-date: 2022-1-1 04:01:00
+date: 2022-06-04 04:01:00
 description: The final part in the Daisy synth series, covering the (optional) audio amplification.
 ---
 
-This is the final part in a series about a bare metal synth. See [the previous post](/2021/12/31/anatomyofabaremetalsynth_part5.html) for info needed here.
+This is the final part in a series about a bare metal synth. See [the previous post](/2022/05/28/anatomyofabaremetalsynth_part5.html) for info needed here.
 
 We last discussed how audio makes it from our program to the serial audio interface. Next up is the following portion of the flow diagram, where the SAI exposes that audio as I2S data
 available on a series of pins we can hook up to.

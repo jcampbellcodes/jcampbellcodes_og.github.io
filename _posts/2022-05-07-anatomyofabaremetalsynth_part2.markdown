@@ -1,11 +1,11 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 2
-date: 2022-01-01 04:01:00
+date: 2022-05-07 04:01:00
 description: A post about the MIDI input circuitry on a Daisy-based synthesizer.
 ---
 
-This is the second part in a series about a bare metal synth. For an introduction to this series, see [the previous post](/2021/12/31/anatomyofabaremetalsynth_part1.html).
+This is the second part in a series about a bare metal synth. For an introduction to this series, see [the previous post](/2022/04/30/anatomyofabaremetalsynth_part1.html).
 
 ### MIDI Circuitry
 <br>

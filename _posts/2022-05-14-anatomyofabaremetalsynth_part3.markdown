@@ -1,11 +1,11 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 3
-date: 2022-01-01 04:01:00
+date: 2022-05-14 04:01:00
 description: A post about the UART driver in a Daisy synth.
 ---
 
-This is the third part in a series about a bare metal synth. It assumes knowledge from the last post about UART signals and MIDI from [the previous post](/2021/12/31/anatomyofabaremetalsynth_part2.html).
+This is the third part in a series about a bare metal synth. It assumes knowledge from the last post about UART signals and MIDI from [the previous post](/2022/05/07/anatomyofabaremetalsynth_part2.html).
 
 # Receiving UART Data on the Daisy
 <br>
