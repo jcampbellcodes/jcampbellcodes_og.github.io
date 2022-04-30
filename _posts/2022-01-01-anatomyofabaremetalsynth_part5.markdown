@@ -18,10 +18,10 @@ The audio samples (`int32_t`s) that we generated in our `AudioCallback` part of 
 
 The integers themselves represent discrete values that a digital to analog converter in our system will convert to analog voltages that are output as electrical current to 
 utilize ~electromagentic induction~ to wiggle a connected speaker in such a way that surrounding air particles are disturbed like dominos until
-those particle oscillations get to the air in our ears and we experience it as sound. 
+those particle oscillations get to the air in our ears and we experience it as sound. (*gasp for air*)
 
 ---------
-SIDE-NOTE: Here are some articles if useful about digital to analog conversion that explain better than my run-on sentence above. Also many cool books and
+SIDE-NOTE: Here are some articles about digital to analog conversion that explain better than my run-on sentence above. Also many cool books and
 diagrams out there that get into more detail about sampling theory. All this stuff applies to more than just audio; buttons and switches for instance also often use
 ADCs to convert analog signals to digital ones that a program can react to. 
 
@@ -59,7 +59,7 @@ for more info on how the SAI is structured on the STM32.
 In our case, we don't care about requesting audio samples for input; we want to send audio samples we generated in our application on the CPU to the audio hardware. As mentioned in the last article, we do this by registering a callback (`AudioCallback`) that the SAI can call when it receives a signal from the DAC that it is ready to convert more samples.
 
 But before we dive further into the mechanics of the communication, we should talk about the format of the audio itself. Digital audio can be transmitted using many different
-serial communications protocol -- in this case, we will configure the SAI to output our audio data in I2S protocol, but it can also be configured for PCM, TDM, SPIDIF, AC' 97, and others.
+serial communications protocols -- in this case, we will configure the SAI to output our audio data in I2S protocol, but it can also be configured for PCM, TDM, SPIDIF, AC' 97, and others.
 
 # Inter-IC Sound (I2S)
 <br>
@@ -85,7 +85,7 @@ With that background, let's take a look at how the Daisy configures the STM32 SA
 <br>
 
 There are several layers that the Daisy library uses to send our audio to the SAI. 
-- At the topmost level, we have a handle to the "DaisySeed" obj
+- At the topmost level, we have a handle to the "DaisySeed" object
 - The DaisySeed has an `AudioHandle` object
 - In turn, `AudioHandle` has a handle to `SaiHandle`
 - Finally, the `SaiHandle` talks to the `SAI_HandleTypeDef` provided by the STM32 HAL library; this is one layer above talking to registers on the hardware
