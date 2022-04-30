@@ -83,7 +83,9 @@ building a custom Linux distribution that works with your target hardware that i
 application software. When starting from scratch, embedded Linux can be much more complicated than bare-metal,
 due to the complexity of rolling your own Linux distro (either manually, or more likely via a 
 build system such as Yocto or Buildroot). There is also the potentially significant extra runtime overhead of running an OS on your target and development overhead of getting around the OS to 
-perform low level operations. However, embedded Linux can be a powerful way to develop and is
+perform low level operations. 
+
+However, embedded Linux can be a powerful way to develop and is
 the go-to approach for writing or porting cross platform software that can more easily be deployed to 
 native platforms like macOS or Windows (or even native Linux). Sometimes the ability to leverage
 an OS outweighs the runtime cost, especially if your application requires you to reimplement
@@ -95,8 +97,10 @@ many of the features that Linux would have offered anyway.
 
 Between the extremes of "bare metal" and "OS-based" embedded programming is programming using
 an RTOS ("ar-toss"), a Real-Time Operating System, the most common of which you'll likely come
-across being FreeRTOS. These operating systems exist with a range of features, but their core featue 
-is a real-time scheduler. A bare metal application can integrate the features of an RTOS
+across being FreeRTOS. These operating systems exist with a range of features, but their core feature 
+is a real-time scheduler. 
+
+A bare metal application can integrate the features of an RTOS
 but still, for the most part, "feel" like a baremetal application, which is why I place it 
 somewhere in the middle. For instance, you may write all your I2C or SPI drivers to communicate 
 with peripherals, and then leverage FreeRTOS scheduler for the realtime functionality of your 
@@ -107,7 +111,9 @@ application.
 
 The last type I'd like to mention is FPGA (field-programmable gate array) programming. This is
 a different beast than the types of development listed above, which focus on programming a 
-microcontroller with a higher level programming language like C++ or Python. When designing
+microcontroller with a higher level programming language like C++ or Python. 
+
+When designing
 an FPGA, you use an HDL (hardware description language) to directly configure the digital logic
 gates on the device. FPGAs can be used to great effect in performance critical parts of a device.
 If interested, check out this [Sparkfun tutorial](https://learn.sparkfun.com/tutorials/programming-an-fpga/all).
