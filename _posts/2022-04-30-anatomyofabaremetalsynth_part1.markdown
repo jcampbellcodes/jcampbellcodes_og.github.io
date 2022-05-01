@@ -130,6 +130,9 @@ devices a lot more straightforward. I like it as a learning tool especially, sin
 libraries are transparent and make it simpler to tinker with what is happening under the 
 hood.
 
+Here's what the synth sounds like:
+<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1260567787&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/jackwcampbell" title="Keen Coyote Music" target="_blank" style="color: #cccccc; text-decoration: none;">Keen Coyote Music</a> · <a href="https://soundcloud.com/jackwcampbell/daisy-synth-example" title="Daisy Synth Example" target="_blank" style="color: #cccccc; text-decoration: none;">Daisy Synth Example</a></div>
+
 Other similar platforms you may find for starting bare metal development are the Arduino
 and Teensy platforms. These are both more general purpose and will involve finding libraries
 and peripherals in order to create audio devices, whereas the Daisy is music-geared out of the
