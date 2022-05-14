@@ -1,11 +1,11 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 3
-date: 2022-05-14 04:01:00
+date: 2022-05-13 04:01:00
 description: A post about the UART driver in a Daisy synth.
 ---
 
-This is the third part in a series about a bare metal synth. It assumes knowledge from the last post about UART signals and MIDI from [the previous post](/2022/05/07/anatomyofabaremetalsynth_part2.html).
+This is the third part in a series about a bare metal synth. It assumes knowledge from the [the previous post](/2022/05/07/anatomyofabaremetalsynth_part2.html) about UART signals and MIDI.
 
 # Receiving UART Data on the Daisy
 <br>
@@ -44,7 +44,7 @@ arpeggiator.
 
 ---
 
-Using this diagram, we want to find the UART Rx pin, because we are transmitting a MIDI
+Using this diagram, we want to find the UART Rx pin, because our keyboard is transmitting a MIDI
 signal to be "received" by the Daisy. In this particular pinout, you'll see the pin we want (pin 15)
 marked as "USART" (Universal Synchronous/Asynchronous Receiver/Transmitter). In this
 case, the difference between UART and USART does not matter, because USARTs can handle regular UART signals as well,
