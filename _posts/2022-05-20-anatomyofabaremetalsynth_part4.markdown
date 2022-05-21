@@ -1,11 +1,11 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 4
-date: 2022-05-21 04:01:00
+date: 2022-05-20 04:01:00
 description: A post about the application portion of the Daisy synth.
 ---
 
-This is the fourth part in a series about a bare metal synth. It assumes knowledge from the last post about pin multiplexing and the Daisy UART driver from [the previous post](/2022/05/14/anatomyofabaremetalsynth_part3.html).
+This is the fourth part in a series about a bare metal synth. It assumes knowledge from the last post about pin multiplexing and the Daisy UART driver from [the previous post](/2022/05/13/anatomyofabaremetalsynth_part3.html).
 
 # Daisy Synth Code
 <br>
