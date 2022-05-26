@@ -1,7 +1,7 @@
 ---
 layout: post
 title: ANATOMY OF A BARE-METAL SYNTH, PART 5
-date: 2022-05-28 04:01:00
+date: 2022-05-26 04:01:00
 description: A post covering the audio codec on the Daisy synth.
 ---
 
@@ -16,9 +16,8 @@ We will be covering this portion of the flow diagram:
 
 The audio samples (`int32_t`s) that we generated in our `AudioCallback` part of our application running on the MCU -- where do they go?
 
-The integers themselves represent discrete values that a digital to analog converter in our system will convert to analog voltages that are output as electrical current to 
-utilize ~electromagentic induction~ to wiggle a connected speaker in such a way that surrounding air particles are disturbed like dominos until
-those particle oscillations get to the air in our ears and we experience it as sound. (*gasp for air*)
+The integers themselves represent (*gasp for air*):
+discrete values that a digital to analog converter in our system will convert to analog voltages that are output as electrical current to utilize ~electromagentic induction~ to wiggle a connected speaker in such a way that surrounding air particles are disturbed like dominos until those particle oscillations get to the air in our ears and we experience it as sound. (*exhale*)
 
 ---------
 SIDE-NOTE: Here are some articles about digital to analog conversion that explain better than my run-on sentence above. Also many cool books and
