@@ -64,7 +64,7 @@ And we connect those three lines into the breakout board like so (see the Sparkf
   <figcaption>Digital audio output sent to I2S codec</figcaption>
 </figure>
 
-The breakout board then sends the output of the DAC to an amplifier (whose gain can be controlled by other pins exposed as inputs) whose analog audio output
+The breakout board then sends the output of the DAC to an amplifier (whose gain can be controlled by other pins exposed as inputs) and the resulting analog audio output
 can be hooked up to headphones or a speaker.
 
 # Appendix: Amplifying Analog Audio
@@ -78,7 +78,7 @@ stage:
   <figcaption>Sending analog audio to amplifier</figcaption>
 </figure>
 
-When we use the breakoutboard from the last section, this part is included without our intervention.
+When we use the breakout board from the last section, this part is included without our intervention.
 However, the audio we receive from the DAC on the Daisy is line-level, so if we plug headphones or unpowered speakers directly into it, it will be much too quiet
 to hear at a usable level.
 
