@@ -1,10 +1,10 @@
 ---
 layout: page
-title: jack campbell
+title: music press releases
 permalink: /music/
 ---
-<!-- # <center> jack campbell </center> 
-<br> -->
+# <center> jack campbell </center> 
+<br>
 
 <figure>
   <img class="col center" style="margin-bottom:10%;" src="/img/prof_pic.jpg">
@@ -31,22 +31,22 @@ and the Netherlands.
 "Something tells me there's a bright future ahead for Jack Campbell."
 - Andrea Swensson, MPR (Minnesota Public Radio)
 
-<!-- <br>
+<br>
 # <center> downloads </center>
 <br>
 <p style="text-align: center;">
-<a href="audio/jackcampbell_press.zip">Press Kit Zip File (WAVs + album art)</a>
+<a href="audio/jack_campbell_press.zip">Press Kit Zip File (WAVs + album art)</a>
 <br>
-<a href="audio/Jack Campbell 01-Home Alone.wav">Home Alone WAV</a>
+<a href="audio/jack_campbell_home_alone.wav">Home Alone WAV</a>
 <br>
-<a href="audio/Jack Campbell - Jack Campbell - 03 Scared of Heights.wav">Scared of Heights WAV</a>
+<a href="audio/jack_campbell_scared_of_heights.wav">Scared of Heights WAV</a>
 <br>
-<a href="audio/Jack Campbell - Absentee - 01 Absentee.wav">Absentee WAV</a>
+<a href="audio/jack_campbell_absentee.wav">Absentee WAV</a>
 <br>
 
-</p> -->
+</p>
 
-<!-- <br>
+<br>
 # <center> music </center>
 <br>
 
@@ -57,7 +57,7 @@ and the Netherlands.
 <iframe style="border: 0; width: 400px; height: 472px; float: right; margin-left: 25%; margin-right: 25%; margin-bottom: 10%;" src="https://bandcamp.com/EmbeddedPlayer/album=75804434/size=large/bgcol=333333/linkcol=0f91ff/artwork=small/transparent=true/" seamless><a href="http://jackcampbell.bandcamp.com/album/jack-campbell">Jack Campbell</a></iframe>
 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/zlvF7JVtYmg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zlvF7JVtYmg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <br>
 # <center> press </center>
@@ -72,16 +72,3 @@ and the Netherlands.
 "absentee is proof positive that all the hard work campbell poured into his music
 was worth it"
 - eric thompson, city pages minneapolis
-
-<br>
-# <center> contact </center>
-<br>
-
-website: [https://jackcampbellsounds.com](https://jackcampbellsounds.com)
-<br>
-bandcamp: [https://jackcampbell.bandcamp.com/](https://jackcampbell.bandcamp.com/)
-<br>
-facebook: [https://www.facebook.com/jackcampbellmusic](https://www.facebook.com/jackcampbellmusic)
-<br>
-email: [jack@jackcampbellsounds.com](mailto:jack@jackcampbellsounds.com)
-<br>

@@ -23,8 +23,9 @@ found on my Bandcamp below.
 <br/>
 <hr/>
 <br/>
+
 <span class="contacticon center">
-	<a href="mailto:jackcampbell@acm.org"><i class="fa fa-envelope-square"></i></a>
+	<a href="mailto:jack@jackcampbellsounds.com"><i class="fa fa-envelope-square"></i></a>
 	<a href="https://github.com/jcampbellcodes" target="_blank"><i class="fab fa-github-square"></i></a>
 	<a href="https://www.linkedin.com/in/jackwcampbell/" target="_blank"><i class="fab fa-linkedin"></i></a>
 	<a href="https://jackcampbell.bandcamp.com/" target="_blank"><i class="fab fa-bandcamp"></i></a>
