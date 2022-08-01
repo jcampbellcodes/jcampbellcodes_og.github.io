@@ -76,11 +76,12 @@ was worth it"
 <br>
 # <center> contact </center>
 <br>
-<span class="contacticon center">
-	<a href="mailto:jackcampbell@acm.org"><i class="fa fa-envelope-square"></i></a>
-	<a href="https://github.com/jcampbellcodes" target="_blank"><i class="fab fa-github-square"></i></a>
-	<a href="https://www.linkedin.com/in/jackwcampbell/" target="_blank"><i class="fab fa-linkedin"></i></a>
-	<a href="https://jackcampbell.bandcamp.com/" target="_blank"><i class="fab fa-bandcamp"></i></a>
-</span>
 
 website: [https://jackcampbellsounds.com](https://jackcampbellsounds.com)
+<br>
+bandcamp: [https://jackcampbell.bandcamp.com/](https://jackcampbell.bandcamp.com/)
+<br>
+facebook: [https://www.facebook.com/jackcampbellmusic](https://www.facebook.com/jackcampbellmusic)
+<br>
+email: [jack@jackcampbellsounds.com](mailto:jack@jackcampbellsounds.com)
+<br>
