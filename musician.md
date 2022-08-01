@@ -35,6 +35,8 @@ and the Netherlands.
 # <center> downloads </center>
 <br>
 <p style="text-align: center;">
+(Right-Click -> Save As to download)
+<br>
 <a href="audio/jack_campbell_home_alone.wav">Home Alone WAV</a>
 <br>
 <a href="audio/jack_campbell_scared_of_heights.wav">Scared of Heights WAV</a>
