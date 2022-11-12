@@ -5,6 +5,9 @@ description: various professional and academic projects I worked on as a sound d
 permalink: /sound_design/
 ---
 
+Just some sound design stuff I did back in school. I don't do much of this type of work anymore,
+but keeping this here for fun -- my favorite is the Evil Dead re-design. :)
+
 {% for project in site.sound_design %}
 
 {% if project.redirect %}
