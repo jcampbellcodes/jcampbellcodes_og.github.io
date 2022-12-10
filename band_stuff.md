@@ -4,7 +4,6 @@ title: band stuff
 description: pseudo-hidden page with stuff for the band
 permalink: /band_stuff/
 ---
-
 # Charts
 
 <br>
@@ -22,6 +21,8 @@ permalink: /band_stuff/
 <br>
 <a href="charts/second_thoughts.pdf">Second Thoughts</a>
 <br>
+<a href="charts/it_isnt_real.pdf">It Isn't Real</a>
+<br>
 <a href="charts/want.pdf">Want</a>
 <br>
 <a href="charts/what_it_takes.pdf">What it Takes</a>
@@ -31,3 +32,5 @@ permalink: /band_stuff/
 
 <br>
 <a href="demos/second_thoughts_demo.mp3">Second Thoughts Demo</a>
+<br>
+<a href="demos/it_isnt_real.mp3">It Isn't Real Demo</a>
